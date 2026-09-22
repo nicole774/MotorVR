@@ -19,7 +19,7 @@ public class PartInfo
 
 public class PartExplorationController : MonoBehaviour
 {
-    [Header("Configuration des Pièces")]
+    [Header("Configuration des Piï¿½ces")]
     public List<PartInfo> partsDatabase = new List<PartInfo>();
 
     [Header("UI Information Panel")]
@@ -41,12 +41,12 @@ public class PartExplorationController : MonoBehaviour
 
     [Header("Spacing Mode")]
     public Button spacingButton;
-    public float spacingDistance = 0.2f; // Distance d'espacement en mètres
+    public float spacingDistance = 0.2f; // Distance d'espacement en mï¿½tres
     private bool isSpacingActive = false;
     private Dictionary<Transform, Vector3> originalPositions;
 
     private GameObject currentSelectedPart;
-    private Material originalMaterial;
+    private readonly Dictionary<GameObject, Material> originalMaterials = new Dictionary<GameObject, Material>();
     private Dictionary<string, PartInfo> partInfoDict;
     private List<GameObject> interactableObjects;
 
@@ -56,39 +56,39 @@ public class PartExplorationController : MonoBehaviour
         SetupUI();
         SetupXRInteraction();
 
-        // Initialisation du système d'espacement
+        // Initialisation du systï¿½me d'espacement
         originalPositions = new Dictionary<Transform, Vector3>();
         InitializeOriginalPositions();
     }
 
     void InitializeDatabase()
     {
-        // Initialise la base de données des pièces avec les informations
+        // Initialise la base de donnï¿½es des piï¿½ces avec les informations
         partsDatabase = new List<PartInfo>
         {
             new PartInfo
             {
                 partName = "carter-moteur-inf",
-                displayName = "Carter Moteur Inférieur",
-                function = "Protège la partie inférieure du moteur et contient l'huile",
-                material = "Aluminium moulé",
-                specifications = "Capacité d'huile: 4-5L, Résistance: 150°C"
+                displayName = "Carter Moteur Infï¿½rieur",
+                function = "Protï¿½ge la partie infï¿½rieure du moteur et contient l'huile",
+                material = "Aluminium moulï¿½",
+                specifications = "Capacitï¿½ d'huile: 4-5L, Rï¿½sistance: 150ï¿½C"
             },
             new PartInfo
             {
                 partName = "carter-moteur-sup",
-                displayName = "Carter Moteur Supérieur",
-                function = "Forme la partie supérieure du bloc moteur",
+                displayName = "Carter Moteur Supï¿½rieur",
+                function = "Forme la partie supï¿½rieure du bloc moteur",
                 material = "Fonte d'aluminium",
-                specifications = "Poids: 15-20kg, Température max: 200°C"
+                specifications = "Poids: 15-20kg, Tempï¿½rature max: 200ï¿½C"
             },
             new PartInfo
             {
                 partName = "cylinder",
                 displayName = "Cylindre",
-                function = "Chambre où s'effectue la combustion du mélange air-carburant",
+                function = "Chambre oï¿½ s'effectue la combustion du mï¿½lange air-carburant",
                 material = "Fonte avec chemise en acier",
-                specifications = "Diamètre: 80-90mm, Course: 75-85mm"
+                specifications = "Diamï¿½tre: 80-90mm, Course: 75-85mm"
             },
             new PartInfo
             {
@@ -102,61 +102,61 @@ public class PartExplorationController : MonoBehaviour
             {
                 partName = "carter-embrayage",
                 displayName = "Carter d'Embrayage",
-                function = "Protège le mécanisme d'embrayage",
-                material = "Aluminium moulé",
+                function = "Protï¿½ge le mï¿½canisme d'embrayage",
+                material = "Aluminium moulï¿½",
                 specifications = "Compatible transmission manuelle"
             },
             new PartInfo
             {
                 partName = "carter-demareur",
-                displayName = "Carter Démarreur",
-                function = "Support et protection du démarreur",
-                material = "Acier estampé",
+                displayName = "Carter Dï¿½marreur",
+                function = "Support et protection du dï¿½marreur",
+                material = "Acier estampï¿½",
                 specifications = "Puissance: 1.2kW, 12V"
             },
             new PartInfo
             {
                 partName = "filtre-a-huile",
-                displayName = "Filtre à Huile",
-                function = "Filtre les impuretés de l'huile moteur",
-                material = "Métal avec élément filtrant papier",
-                specifications = "Capacité: 0.5L, Changement: 10000km"
+                displayName = "Filtre ï¿½ Huile",
+                function = "Filtre les impuretï¿½s de l'huile moteur",
+                material = "Mï¿½tal avec ï¿½lï¿½ment filtrant papier",
+                specifications = "Capacitï¿½: 0.5L, Changement: 10000km"
             },
             new PartInfo
             {
                 partName = "carter-huile-moteur",
                 displayName = "Carter d'Huile",
-                function = "Réservoir d'huile moteur",
-                material = "Tôle d'acier emboutie",
+                function = "Rï¿½servoir d'huile moteur",
+                material = "Tï¿½le d'acier emboutie",
                 specifications = "Volume: 4.5L, Vidange par bouchon"
             },
             new PartInfo
             {
                 partName = "alternateur",
                 displayName = "Alternateur",
-                function = "Génère l'électricité pour alimenter les systèmes",
-                material = "Boîtier aluminium, bobines cuivre",
+                function = "Gï¿½nï¿½re l'ï¿½lectricitï¿½ pour alimenter les systï¿½mes",
+                material = "Boï¿½tier aluminium, bobines cuivre",
                 specifications = "14V, 90-120A, 1800-6000 rpm"
             },
             new PartInfo
             {
                 partName = "demareur",
-                displayName = "Démarreur",
-                function = "Lance le moteur lors du démarrage",
-                material = "Boîtier fonte, bobines cuivre",
+                displayName = "Dï¿½marreur",
+                function = "Lance le moteur lors du dï¿½marrage",
+                material = "Boï¿½tier fonte, bobines cuivre",
                 specifications = "12V, couple: 150-200 Nm"
             },
             new PartInfo
             {
                 partName = "culasse",
                 displayName = "Culasse",
-                function = "Partie supérieure du moteur, contient les soupapes",
+                function = "Partie supï¿½rieure du moteur, contient les soupapes",
                 material = "Alliage d'aluminium",
                 specifications = "2-4 soupapes par cylindre, refroidissement liquide"
             }
         };
 
-        // Crée un dictionnaire pour un accès rapide
+        // Crï¿½e un dictionnaire pour un accï¿½s rapide
         partInfoDict = new Dictionary<string, PartInfo>();
         foreach (var part in partsDatabase)
         {
@@ -188,7 +188,7 @@ public class PartExplorationController : MonoBehaviour
             UpdateSpacingButtonText();
         }
 
-        // Ferme le panneau au démarrage
+        // Ferme le panneau au dï¿½marrage
         if (infoPanel != null)
             infoPanel.SetActive(false);
     }
@@ -197,16 +197,16 @@ public class PartExplorationController : MonoBehaviour
     {
         interactableObjects = new List<GameObject>();
 
-        // Trouve le moteur assemblé dans la scène
+        // Trouve le moteur assemblï¿½ dans la scï¿½ne
         GameObject motorParent = GameObject.Find("moteur_assemble");
 
         if (motorParent == null)
         {
-            Debug.LogError("moteur_assemble non trouvé dans la scène !");
+            Debug.LogError("moteur_assemble non trouvï¿½ dans la scï¿½ne !");
             return;
         }
 
-        // Configure les objets interactifs pour toutes les pièces du moteur
+        // Configure les objets interactifs pour toutes les piï¿½ces du moteur
         foreach (var partInfo in partsDatabase)
         {
             // Cherche dans les enfants du moteur
@@ -214,24 +214,24 @@ public class PartExplorationController : MonoBehaviour
 
             if (partTransform != null)
             {
-                // Assigne la référence Transform dans partInfo
+                // Assigne la rï¿½fï¿½rence Transform dans partInfo
                 partInfo.partTransform = partTransform;
 
                 GameObject partObject = partTransform.gameObject;
                 SetupInteractableObject(partObject);
                 interactableObjects.Add(partObject);
-                Debug.Log("Pièce configurée pour interaction: " + partInfo.partName);
+                Debug.Log("Piï¿½ce configurï¿½e pour interaction: " + partInfo.partName);
             }
             else
             {
-                Debug.LogWarning("Pièce non trouvée: " + partInfo.partName);
+                Debug.LogWarning("Piï¿½ce non trouvï¿½e: " + partInfo.partName);
             }
         }
     }
 
     void InitializeOriginalPositions()
     {
-        // Sauvegarde les positions originales de toutes les pièces
+        // Sauvegarde les positions originales de toutes les piï¿½ces
         foreach (var partInfo in partsDatabase)
         {
             if (partInfo.partTransform != null)
@@ -239,7 +239,7 @@ public class PartExplorationController : MonoBehaviour
                 originalPositions[partInfo.partTransform] = partInfo.partTransform.position;
             }
         }
-        Debug.Log($"Positions originales sauvegardées pour {originalPositions.Count} pièces");
+        Debug.Log($"Positions originales sauvegardï¿½es pour {originalPositions.Count} piï¿½ces");
     }
 
     public void ToggleSpacing()
@@ -256,12 +256,12 @@ public class PartExplorationController : MonoBehaviour
         }
 
         UpdateSpacingButtonText();
-        Debug.Log($"Mode espacement: {(isSpacingActive ? "Activé" : "Désactivé")}");
+        Debug.Log($"Mode espacement: {(isSpacingActive ? "Activï¿½" : "Dï¿½sactivï¿½")}");
     }
 
     void ApplySpacing()
     {
-        // Centre du moteur (calculé automatiquement)
+        // Centre du moteur (calculï¿½ automatiquement)
         Vector3 motorCenter = CalculateMotorCenter();
 
         foreach (var partInfo in partsDatabase)
@@ -270,7 +270,7 @@ public class PartExplorationController : MonoBehaviour
             {
                 Vector3 direction = (partInfo.partTransform.position - motorCenter).normalized;
 
-                // Si la direction est trop petite, utilise une direction par défaut
+                // Si la direction est trop petite, utilise une direction par dï¿½faut
                 if (direction.magnitude < 0.1f)
                 {
                     direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
@@ -336,7 +336,7 @@ public class PartExplorationController : MonoBehaviour
             TextMeshProUGUI buttonText = spacingButton.GetComponentInChildren<TextMeshProUGUI>();
             if (buttonText != null)
             {
-                buttonText.text = isSpacingActive ? "Réassembler" : "Espacer Pièces";
+                buttonText.text = isSpacingActive ? "Rï¿½assembler" : "Espacer Piï¿½ces";
             }
         }
     }
@@ -349,12 +349,12 @@ public class PartExplorationController : MonoBehaviour
             interactable = obj.AddComponent<XRSimpleInteractable>();
         }
 
-        // Supprime les anciens listeners pour éviter les doublons
+        // Supprime les anciens listeners pour ï¿½viter les doublons
         interactable.selectEntered.RemoveAllListeners();
         interactable.hoverEntered.RemoveAllListeners();
         interactable.hoverExited.RemoveAllListeners();
 
-        // Configure les événements
+        // Configure les ï¿½vï¿½nements
         interactable.selectEntered.AddListener((args) => {
             Debug.Log("SELECT EVENT: " + obj.name);
             OnPartSelected(obj);
@@ -402,8 +402,8 @@ public class PartExplorationController : MonoBehaviour
         Renderer renderer = part.GetComponent<Renderer>();
         if (renderer != null && material != null)
         {
-            if (originalMaterial == null)
-                originalMaterial = renderer.material;
+            if (!originalMaterials.ContainsKey(part))
+                originalMaterials[part] = renderer.material;
             renderer.material = material;
         }
     }
@@ -411,9 +411,9 @@ public class PartExplorationController : MonoBehaviour
     void RemoveHighlight(GameObject part)
     {
         Renderer renderer = part.GetComponent<Renderer>();
-        if (renderer != null && originalMaterial != null)
+        if (renderer != null && originalMaterials.TryGetValue(part, out Material original))
         {
-            renderer.material = originalMaterial;
+            renderer.material = original;
         }
     }
 
@@ -430,10 +430,10 @@ public class PartExplorationController : MonoBehaviour
                 functionText.text = "<b>Fonction:</b> " + info.function;
 
             if (materialText != null)
-                materialText.text = "<b>Matériau:</b> " + info.material;
+                materialText.text = "<b>Matï¿½riau:</b> " + info.material;
 
             if (specificationsText != null)
-                specificationsText.text = "<b>Spécifications:</b> " + info.specifications;
+                specificationsText.text = "<b>Spï¿½cifications:</b> " + info.specifications;
 
             if (infoPanel != null)
                 infoPanel.SetActive(true);
@@ -445,7 +445,7 @@ public class PartExplorationController : MonoBehaviour
         if (infoPanel != null)
             infoPanel.SetActive(false);
 
-        // Retire la sélection
+        // Retire la sï¿½lection
         if (currentSelectedPart != null)
         {
             RemoveHighlight(currentSelectedPart);
@@ -465,11 +465,11 @@ public class PartExplorationController : MonoBehaviour
         // Test temporaire avec la souris pour PC
         if (Input.GetMouseButtonDown(0))
         {
-            // Vérifie si le panneau d'information est déjà ouvert
+            // Vï¿½rifie si le panneau d'information est dï¿½jï¿½ ouvert
             if (infoPanel != null && infoPanel.activeInHierarchy)
             {
-                Debug.Log("Panneau déjà ouvert - fermez-le d'abord avant de sélectionner une autre pièce");
-                return; // Empêche la sélection
+                Debug.Log("Panneau dï¿½jï¿½ ouvert - fermez-le d'abord avant de sï¿½lectionner une autre piï¿½ce");
+                return; // Empï¿½che la sï¿½lection
             }
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -479,15 +479,15 @@ public class PartExplorationController : MonoBehaviour
             {
                 GameObject hitObject = hit.collider.gameObject;
 
-                // Vérifier si c'est une pièce du moteur
+                // Vï¿½rifier si c'est une piï¿½ce du moteur
                 if (hitObject.CompareTag("EnginePart"))
                 {
                     OnPartSelected(hitObject);
-                    Debug.Log("Pièce sélectionnée avec souris: " + hitObject.name);
+                    Debug.Log("Piï¿½ce sï¿½lectionnï¿½e avec souris: " + hitObject.name);
                 }
                 else
                 {
-                    Debug.Log("Objet cliqué n'est pas une pièce moteur: " + hitObject.name + " (Tag: " + hitObject.tag + ")");
+                    Debug.Log("Objet cliquï¿½ n'est pas une piï¿½ce moteur: " + hitObject.name + " (Tag: " + hitObject.tag + ")");
                 }
             }
         }
@@ -507,7 +507,7 @@ public class PartExplorationController : MonoBehaviour
 #endif
     }
 
-    // Méthode helper pour chercher dans les enfants
+    // Mï¿½thode helper pour chercher dans les enfants
     Transform FindChildByName(Transform parent, string name)
     {
         foreach (Transform child in parent)
@@ -515,7 +515,7 @@ public class PartExplorationController : MonoBehaviour
             if (child.name == name)
                 return child;
 
-            // Recherche récursive dans les enfants
+            // Recherche rï¿½cursive dans les enfants
             Transform found = FindChildByName(child, name);
             if (found != null)
                 return found;

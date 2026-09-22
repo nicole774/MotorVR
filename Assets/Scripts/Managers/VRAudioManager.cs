@@ -46,17 +46,15 @@ public class VRAudioManager : MonoBehaviour
     private List<AudioSource> sfxSources;
     private int maxSFXSources = 10;
 
-    // État du gestionnaire audio
+    // ï¿½tat du gestionnaire audio
     private float masterVolume = 1f;
     private bool isMuted = false;
     private Coroutine currentMusicFade;
 
-    public int Length { get; private set; }
-
     void Awake()
     {
         // Singleton pattern
-        if (FindFirstObjectByType<VRAudioManager>().Length > 1)
+        if (FindObjectsByType<VRAudioManager>(FindObjectsSortMode.None).Length > 1)
         {
             Destroy(gameObject);
             return;
@@ -80,7 +78,7 @@ public class VRAudioManager : MonoBehaviour
     {
         audioDict = new Dictionary<string, AudioClipData>();
 
-        // Ajoute les clips prédéfinis
+        // Ajoute les clips prï¿½dï¿½finis
         foreach (AudioClipData clipData in audioClips)
         {
             if (!string.IsNullOrEmpty(clipData.name))
@@ -153,7 +151,7 @@ public class VRAudioManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"Son non trouvé : {soundName}");
+            Debug.LogWarning($"Son non trouvï¿½ : {soundName}");
         }
     }
 
@@ -210,7 +208,7 @@ public class VRAudioManager : MonoBehaviour
             }
         }
 
-        // Si aucune source disponible, utilise la première (override)
+        // Si aucune source disponible, utilise la premiï¿½re (override)
         return sfxSources[0];
     }
 
@@ -355,7 +353,7 @@ public class VRAudioManager : MonoBehaviour
 
     #endregion
 
-    #region Contrôles Volume
+    #region Contrï¿½les Volume
 
     public void SetMasterVolume(float volume)
     {
@@ -392,19 +390,19 @@ public class VRAudioManager : MonoBehaviour
 
     void UpdateAllVolumes()
     {
-        // Met à jour la musique
+        // Met ï¿½ jour la musique
         if (musicSource != null)
         {
             musicSource.volume = musicVolume * masterVolume;
         }
 
-        // Met à jour les instructions vocales
+        // Met ï¿½ jour les instructions vocales
         if (voiceSource != null)
         {
             voiceSource.volume = masterVolume;
         }
 
-        // Met à jour le mixer principal
+        // Met ï¿½ jour le mixer principal
         if (masterMixer != null)
         {
             masterMixer.audioMixer.SetFloat("MasterVolume", LinearToDecibel(masterVolume));
@@ -424,7 +422,7 @@ public class VRAudioManager : MonoBehaviour
 
     #endregion
 
-    #region Effets Audio Spécialisés
+    #region Effets Audio Spï¿½cialisï¿½s
 
     public void PlaySnapSound(Vector3 position)
     {
@@ -454,7 +452,7 @@ public class VRAudioManager : MonoBehaviour
     public void PlayAssemblyCompleteSound()
     {
         PlaySound("assembly_complete", null, 1f);
-        // Ajoute un délai avant l'instruction vocale
+        // Ajoute un dï¿½lai avant l'instruction vocale
         StartCoroutine(PlayDelayedVoiceInstruction("assembly_complete", 1f));
     }
 
@@ -475,7 +473,7 @@ public class VRAudioManager : MonoBehaviour
 
     public void OnSceneChanged(string sceneName)
     {
-        // Change la musique selon la scène
+        // Change la musique selon la scï¿½ne
         switch (sceneName)
         {
             case "MainMenu":
@@ -515,7 +513,7 @@ public class VRAudioManager : MonoBehaviour
 
     public void OnAssemblyProgress(float progress)
     {
-        // Joue des sons selon le progrès
+        // Joue des sons selon le progrï¿½s
         if (progress >= 0.25f && progress < 0.26f)
         {
             PlayVoiceInstruction("quarter_complete");
@@ -536,7 +534,7 @@ public class VRAudioManager : MonoBehaviour
 
     #endregion
 
-    #region Méthodes Utilitaires
+    #region Mï¿½thodes Utilitaires
 
     public bool IsPlayingMusic()
     {
@@ -550,7 +548,7 @@ public class VRAudioManager : MonoBehaviour
 
     public void StopAllSounds()
     {
-        // Arrête tous les effets sonores
+        // Arrï¿½te tous les effets sonores
         foreach (AudioSource source in sfxSources)
         {
             if (source.isPlaying)
@@ -559,7 +557,7 @@ public class VRAudioManager : MonoBehaviour
             }
         }
 
-        // Arrête les instructions vocales
+        // Arrï¿½te les instructions vocales
         StopVoiceInstruction();
     }
 
@@ -583,21 +581,21 @@ public class VRAudioManager : MonoBehaviour
 
     public void ResumeAllAudio()
     {
-        // Vérifie musicSource avant utilisation
+        // Vï¿½rifie musicSource avant utilisation
         if (musicSource != null)
             musicSource.UnPause();
 
-        // Vérifie sfxSources avant utilisation
+        // Vï¿½rifie sfxSources avant utilisation
         if (sfxSources != null)
         {
             foreach (AudioSource source in sfxSources)
             {
-                if (source != null)  // Vérification supplémentaire
+                if (source != null)  // Vï¿½rification supplï¿½mentaire
                     source.UnPause();
             }
         }
 
-        // Vérifie voiceSource avant utilisation
+        // Vï¿½rifie voiceSource avant utilisation
         if (voiceSource != null)
             voiceSource.UnPause();
     }
@@ -661,7 +659,7 @@ public class VRAudioManager : MonoBehaviour
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
     void Update()
     {
-        // Touches de debug en éditeur
+        // Touches de debug en ï¿½diteur
         if (Input.GetKeyDown(KeyCode.Alpha1))
             PlaySound("snap");
         if (Input.GetKeyDown(KeyCode.Alpha2))

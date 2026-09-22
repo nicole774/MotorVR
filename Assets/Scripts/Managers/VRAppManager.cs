@@ -44,14 +44,12 @@ public class VRAppManager : MonoBehaviour
     public System.Action OnAppInitialized;
     public System.Action OnAppShutdown;
 
-    public int Length { get; private set; }
-
     #region Initialization
 
     void Awake()
     {
         // Singleton pattern
-        if (FindFirstObjectByType<VRAppManager>().Length > 1)
+        if (FindObjectsByType<VRAppManager>(FindObjectsSortMode.None).Length > 1)
         {
             Destroy(gameObject);
             return;
@@ -70,36 +68,36 @@ public class VRAppManager : MonoBehaviour
     {
         Debug.Log("=== Initialisation de l'Application VR Moteur ===");
 
-        // Étape 1: Vérification XR
+        // ï¿½tape 1: Vï¿½rification XR
         yield return StartCoroutine(InitializeXR());
 
-        // Étape 2: Systèmes Core
+        // ï¿½tape 2: Systï¿½mes Core
         InitializeCoreComponents();
 
-        // Étape 3: Systèmes Secondaires
+        // ï¿½tape 3: Systï¿½mes Secondaires
         InitializeSecondaryComponents();
 
-        // Étape 4: Configuration finale
+        // ï¿½tape 4: Configuration finale
         FinalizeInitialization();
 
         isAppInitialized = true;
         OnAppInitialized?.Invoke();
 
-        Debug.Log("=== Application VR Moteur Initialisée ===");
+        Debug.Log("=== Application VR Moteur Initialisï¿½e ===");
     }
 
     IEnumerator InitializeXR()
     {
         Debug.Log("Initialisation XR...");
 
-        // Vérifie si XR est disponible
+        // Vï¿½rifie si XR est disponible
         if (!XRSettings.enabled)
         {
-            Debug.LogWarning("XR non activé - Mode Desktop");
+            Debug.LogWarning("XR non activï¿½ - Mode Desktop");
             yield break;
         }
 
-        // Attendre que XR soit prêt
+        // Attendre que XR soit prï¿½t
         yield return new WaitUntil(() => XRSettings.loadedDeviceName != "");
 
         // Configure XR Origin
@@ -108,12 +106,12 @@ public class VRAppManager : MonoBehaviour
 
         if (xrOrigin == null)
         {
-            Debug.LogError("XR Origin non trouvé!");
+            Debug.LogError("XR Origin non trouvï¿½!");
             yield break;
         }
 
         SetupXRConfiguration();
-        Debug.Log($"XR initialisé - Device: {XRSettings.loadedDeviceName}");
+        Debug.Log($"XR initialisï¿½ - Device: {XRSettings.loadedDeviceName}");
     }
 
     void SetupXRConfiguration()
@@ -121,17 +119,17 @@ public class VRAppManager : MonoBehaviour
         // Configuration de la locomotion
         SetupLocomotion();
 
-        // Configuration des limites de sécurité
+        // Configuration des limites de sï¿½curitï¿½
         if (enableBoundarySystem)
             SetupBoundarySystem();
 
-        // Configuration des contrôleurs
+        // Configuration des contrï¿½leurs
         SetupControllers();
     }
 
     void SetupLocomotion()
     {
-        // TEMPORAIREMENT DÉSACTIVÉ - Les prefabs gèrent déjà la locomotion
+        // TEMPORAIREMENT Dï¿½SACTIVï¿½ - Les prefabs gï¿½rent dï¿½jï¿½ la locomotion
         Debug.Log("Locomotion : Utilisation des prefabs existants");
 
         // On garde juste la configuration des angles
@@ -147,27 +145,27 @@ public class VRAppManager : MonoBehaviour
 
     void SetupBoundarySystem()
     {
-        // Configuration du système de limites XR générique
-        Debug.Log("Configuration des limites de sécurité XR");
+        // Configuration du systï¿½me de limites XR gï¿½nï¿½rique
+        Debug.Log("Configuration des limites de sï¿½curitï¿½ XR");
 
-        // Configuration OpenXR générale (compatible tous casques)
+        // Configuration OpenXR gï¿½nï¿½rale (compatible tous casques)
         if (XRSettings.loadedDeviceName.Contains("OpenXR"))
         {
             // Configuration des limites via OpenXR
-            Debug.Log("Limites configurées via OpenXR");
+            Debug.Log("Limites configurï¿½es via OpenXR");
         }
 
-        // Configuration alternative pour d'autres systèmes XR
+        // Configuration alternative pour d'autres systï¿½mes XR
         SetupGenericBoundaries();
     }
 
     void SetupGenericBoundaries()
     {
-        // Configuration des limites génériques
+        // Configuration des limites gï¿½nï¿½riques
         if (boundaryMaterial != null)
         {
-            // Applique le matériau des limites si configuré
-            Debug.Log("Matériau de limites appliqué");
+            // Applique le matï¿½riau des limites si configurï¿½
+            Debug.Log("Matï¿½riau de limites appliquï¿½");
         }
     }
 
@@ -175,22 +173,22 @@ public class VRAppManager : MonoBehaviour
     {
 
         // SOLUTION MODERNE - Compatible avec XR Interaction Toolkit 3.0+
-        Debug.Log("Configuration des contrôleurs : Gérée automatiquement par les prefabs XR");
+        Debug.Log("Configuration des contrï¿½leurs : Gï¿½rï¿½e automatiquement par les prefabs XR");
 
         // Les prefabs XR Interaction Toolkit 3.0+ configurent automatiquement :
         // - ActionBasedController (remplace XRController)
-        // - Interactors appropriés (Ray, Direct, Near-Far)
+        // - Interactors appropriï¿½s (Ray, Direct, Near-Far)
         // - Input Actions
         // - Animations et feedback
 
-        // Vérification optionnelle que les contrôleurs sont présents
+        // Vï¿½rification optionnelle que les contrï¿½leurs sont prï¿½sents
         var interactors = xrOrigin.GetComponentsInChildren<UnityEngine.XR.Interaction.Toolkit.Interactors.IXRInteractor>();
-        Debug.Log($"Interactors détectés : {interactors.Length}");
+        Debug.Log($"Interactors dï¿½tectï¿½s : {interactors.Length}");
 
 
 
         /*
-    // ANCIEN CODE OBSOLÈTE - Commenté pour référence
+    // ANCIEN CODE OBSOLï¿½TE - Commentï¿½ pour rï¿½fï¿½rence
     XRController[] controllers = xrOrigin.GetComponentsInChildren<XRController>();
     foreach (XRController controller in controllers)
     {
@@ -265,10 +263,10 @@ public class VRAppManager : MonoBehaviour
 
     void FinalizeInitialization()
     {
-        // Configuration des événements
+        // Configuration des ï¿½vï¿½nements
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        // Configuration des paramètres de qualité
+        // Configuration des paramï¿½tres de qualitï¿½
         ConfigureQualitySettings();
 
         // Affichage des informations de debug
@@ -289,15 +287,15 @@ public class VRAppManager : MonoBehaviour
         currentSceneName = scene.name;
         OnSceneChanged?.Invoke(currentSceneName);
 
-        Debug.Log($"Scène chargée: {currentSceneName}");
+        Debug.Log($"Scï¿½ne chargï¿½e: {currentSceneName}");
 
-        // Initialise les systèmes spécifiques à la scène
+        // Initialise les systï¿½mes spï¿½cifiques ï¿½ la scï¿½ne
         StartCoroutine(InitializeSceneSpecificSystems());
     }
 
     IEnumerator InitializeSceneSpecificSystems()
     {
-        yield return new WaitForSeconds(0.1f); // Petite pause pour que la scène soit complètement chargée
+        yield return new WaitForSeconds(0.1f); // Petite pause pour que la scï¿½ne soit complï¿½tement chargï¿½e
 
         switch (currentSceneName)
         {
@@ -315,7 +313,7 @@ public class VRAppManager : MonoBehaviour
                 break;
         }
 
-        // Notification aux systèmes
+        // Notification aux systï¿½mes
         if (audioManager != null)
             audioManager.OnSceneChanged(currentSceneName);
     }
@@ -327,29 +325,29 @@ public class VRAppManager : MonoBehaviour
         VRMainMenu mainMenu = FindFirstObjectByType<VRMainMenu>();
         if (mainMenu != null)
         {
-            // Configuration spécifique du menu
+            // Configuration spï¿½cifique du menu
         }
     }
 
     void InitializeExplodedView()
     {
-        Debug.Log("Initialisation de la vue éclatée...");
+        Debug.Log("Initialisation de la vue ï¿½clatï¿½e...");
 
         ExplodedViewController explodedController = FindFirstObjectByType<ExplodedViewController>();
         if (explodedController != null)
         {
-            // Configuration spécifique
+            // Configuration spï¿½cifique
         }
     }
 
     void InitializePartExploration()
     {
-        Debug.Log("Initialisation de l'exploration des pièces...");
+        Debug.Log("Initialisation de l'exploration des piï¿½ces...");
 
         PartExplorationController explorationController = FindFirstObjectByType<PartExplorationController>();
         if (explorationController != null)
         {
-            // Configuration spécifique
+            // Configuration spï¿½cifique
         }
     }
 
@@ -360,7 +358,7 @@ public class VRAppManager : MonoBehaviour
         ManualAssemblyController assemblyController = FindFirstObjectByType<ManualAssemblyController>();
         if (assemblyController != null)
         {
-            // Configuration spécifique
+            // Configuration spï¿½cifique
         }
     }
 
@@ -370,8 +368,8 @@ public class VRAppManager : MonoBehaviour
 
     void ConfigureQualitySettings()
     {
-        // Configuration optimisée pour VR
-        QualitySettings.vSyncCount = 0; // Désactive VSync pour VR
+        // Configuration optimisï¿½e pour VR
+        QualitySettings.vSyncCount = 0; // Dï¿½sactive VSync pour VR
         Application.targetFrameRate = 90; // 90 FPS pour Oculus Quest
 
         // Configuration des ombres
@@ -385,20 +383,20 @@ public class VRAppManager : MonoBehaviour
         // Anisotropic filtering
         QualitySettings.anisotropicFiltering = AnisotropicFiltering.Enable;
 
-        Debug.Log("Paramètres de qualité configurés pour VR");
+        Debug.Log("Paramï¿½tres de qualitï¿½ configurï¿½s pour VR");
     }
 
     public void OptimizeForPerformance()
     {
-        // Réduction de qualité pour améliorer les performances
-        QualitySettings.SetQualityLevel(1); // Qualité moyenne
+        // Rï¿½duction de qualitï¿½ pour amï¿½liorer les performances
+        QualitySettings.SetQualityLevel(1); // Qualitï¿½ moyenne
         QualitySettings.shadows = ShadowQuality.Disable;
         QualitySettings.antiAliasing = 2;
 
-        // Réduction de la résolution de rendu
+        // Rï¿½duction de la rï¿½solution de rendu
         UnityEngine.XR.XRSettings.eyeTextureResolutionScale = 0.8f;
 
-        Debug.Log("Optimisation de performance appliquée");
+        Debug.Log("Optimisation de performance appliquï¿½e");
     }
 
     #endregion
@@ -410,11 +408,11 @@ public class VRAppManager : MonoBehaviour
         Debug.Log("=== Informations de Debug ===");
         Debug.Log($"Version de l'App: {appVersion}");
 
-        // Device XR avec vérification
+        // Device XR avec vï¿½rification
         string deviceName = XRSettings.loadedDeviceName;
         Debug.Log($"Device XR: {(string.IsNullOrEmpty(deviceName) ? "None" : deviceName)}");
 
-        // Refresh rate sécurisé (VERSION CORRIGÉE)
+        // Refresh rate sï¿½curisï¿½ (VERSION CORRIGï¿½E)
         try
         {
             float refreshRate = Application.targetFrameRate > 0 ? Application.targetFrameRate : GetScreenRefreshRate();
@@ -425,7 +423,7 @@ public class VRAppManager : MonoBehaviour
             Debug.Log("Refresh Rate: Non disponible");
         }
 
-        // Résolution des yeux
+        // Rï¿½solution des yeux
         if (XRSettings.enabled)
         {
             Debug.Log($"Eye Texture Resolution: {XRSettings.eyeTextureWidth}x{XRSettings.eyeTextureHeight}");
@@ -435,7 +433,7 @@ public class VRAppManager : MonoBehaviour
         // Tracking space
         Debug.Log($"Tracking Space: {GetTrackingOriginMode()}");
 
-        // Informations supplémentaires utiles
+        // Informations supplï¿½mentaires utiles
         Debug.Log($"VR Enabled: {XRSettings.enabled}");
         Debug.Log($"Platform: {Application.platform}");
         Debug.Log($"Unity Version: {Application.unityVersion}");
@@ -443,7 +441,7 @@ public class VRAppManager : MonoBehaviour
         Debug.Log("============================");
     }
 
-    // Méthode helper pour le refresh rate moderne
+    // Mï¿½thode helper pour le refresh rate moderne
     float GetScreenRefreshRate()
     {
         try
@@ -453,11 +451,11 @@ public class VRAppManager : MonoBehaviour
         }
         catch (System.Exception)
         {
-            return 60f; // Valeur par défaut
+            return 60f; // Valeur par dï¿½faut
         }
     }
 
-    // Méthode helper pour le tracking origin
+    // Mï¿½thode helper pour le tracking origin
     string GetTrackingOriginMode()
     {
         try
@@ -481,7 +479,7 @@ public class VRAppManager : MonoBehaviour
 Application: Moteur VR Educational
 Version: {appVersion}
 Temps de session: {GetSessionDuration():F1}s
-Scène actuelle: {currentSceneName}
+Scï¿½ne actuelle: {currentSceneName}
 Device VR: {XRSettings.loadedDeviceName}
 FPS moyen: {(performanceMonitor != null ? performanceMonitor.GetAverageFPS().ToString("F1") : "N/A")}";
 
@@ -504,7 +502,7 @@ FPS moyen: {(performanceMonitor != null ? performanceMonitor.GetAverageFPS().ToS
     {
         if (!isAppInitialized) return;
 
-        // Vérifications de sécurité
+        // Vï¿½rifications de sï¿½curitï¿½
         CheckApplicationHealth();
 
         // Debug inputs
@@ -513,20 +511,20 @@ FPS moyen: {(performanceMonitor != null ? performanceMonitor.GetAverageFPS().ToS
 
     void CheckApplicationHealth()
     {
-        // Vérifie la performance
+        // Vï¿½rifie la performance
         if (performanceMonitor != null && !performanceMonitor.IsPerformanceGood())
         {
-            // Performance dégradée détectée
+            // Performance dï¿½gradï¿½e dï¿½tectï¿½e
             if (Time.frameCount % 300 == 0) // Check every 5 seconds at 60fps
             {
-                Debug.LogWarning("Performance dégradée détectée");
+                Debug.LogWarning("Performance dï¿½gradï¿½e dï¿½tectï¿½e");
             }
         }
 
-        // Vérifie la connectivité XR
+        // Vï¿½rifie la connectivitï¿½ XR
         if (XRSettings.enabled && string.IsNullOrEmpty(XRSettings.loadedDeviceName))
         {
-            Debug.LogWarning("Perte de connexion XR détectée");
+            Debug.LogWarning("Perte de connexion XR dï¿½tectï¿½e");
         }
     }
 
@@ -550,13 +548,13 @@ FPS moyen: {(performanceMonitor != null ? performanceMonitor.GetAverageFPS().ToS
 
         if (pauseStatus)
         {
-            // Pause des systèmes
+            // Pause des systï¿½mes
             if (audioManager != null)
                 audioManager.PauseAllAudio();
         }
         else
         {
-            // Reprise des systèmes
+            // Reprise des systï¿½mes
             if (audioManager != null)
                 audioManager.ResumeAllAudio();
         }
@@ -573,7 +571,7 @@ FPS moyen: {(performanceMonitor != null ? performanceMonitor.GetAverageFPS().ToS
         }
         else
         {
-            // L'application récupère le focus
+            // L'application rï¿½cupï¿½re le focus
             Time.timeScale = 1f;
         }
     }
@@ -587,19 +585,19 @@ FPS moyen: {(performanceMonitor != null ? performanceMonitor.GetAverageFPS().ToS
         if (audioManager != null)
             audioManager.StopAllSounds();
 
-        // Sauvegarde des paramètres si nécessaire
+        // Sauvegarde des paramï¿½tres si nï¿½cessaire
         SaveApplicationSettings();
     }
 
     void SaveApplicationSettings()
     {
-        // Sauvegarde des préférences utilisateur
+        // Sauvegarde des prï¿½fï¿½rences utilisateur
         PlayerPrefs.SetFloat("MasterVolume", audioManager != null ? 1f : 1f);
         PlayerPrefs.SetInt("QualityLevel", QualitySettings.GetQualityLevel());
         PlayerPrefs.SetFloat("SessionDuration", GetSessionDuration());
         PlayerPrefs.Save();
 
-        Debug.Log("Paramètres de l'application sauvegardés");
+        Debug.Log("Paramï¿½tres de l'application sauvegardï¿½s");
     }
 
     #endregion
@@ -612,13 +610,13 @@ FPS moyen: {(performanceMonitor != null ? performanceMonitor.GetAverageFPS().ToS
 
     public void RestartApplication()
     {
-        Debug.Log("Redémarrage de l'application...");
-        SceneManager.LoadScene(0); // Charge la première scène
+        Debug.Log("Redï¿½marrage de l'application...");
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void QuitApplication()
     {
-        Debug.Log("Fermeture de l'application demandée...");
+        Debug.Log("Fermeture de l'application demandï¿½e...");
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -634,14 +632,14 @@ FPS moyen: {(performanceMonitor != null ? performanceMonitor.GetAverageFPS().ToS
         if (performanceMonitor != null)
             performanceMonitor.showDebugUI = enable;
 
-        Debug.Log($"Mode debug: {(enable ? "Activé" : "Désactivé")}");
+        Debug.Log($"Mode debug: {(enable ? "Activï¿½" : "Dï¿½sactivï¿½")}");
     }
 
     #endregion
 
     void OnDestroy()
     {
-        // Nettoyage des événements
+        // Nettoyage des ï¿½vï¿½nements
         SceneManager.sceneLoaded -= OnSceneLoaded;
         OnSceneChanged = null;
         OnAppInitialized = null;

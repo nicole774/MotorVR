@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class VRPerformanceMonitor : MonoBehaviour
 {
@@ -48,7 +50,7 @@ public class VRPerformanceMonitor : MonoBehaviour
 
     void Start()
     {
-        // Configure la fréquence cible
+        // Configure la frï¿½quence cible
         Application.targetFrameRate = (int)targetFrameRate;
         QualitySettings.vSyncCount = 0;
 
@@ -62,7 +64,7 @@ public class VRPerformanceMonitor : MonoBehaviour
 
     void SetupDebugUI()
     {
-        if (debugCanvas != null)
+        if (debugCanvas != null && Camera.main != null)
         {
             debugCanvas.gameObject.SetActive(showDebugUI);
 
@@ -70,7 +72,7 @@ public class VRPerformanceMonitor : MonoBehaviour
             debugCanvas.renderMode = RenderMode.WorldSpace;
             debugCanvas.worldCamera = Camera.main;
 
-            // Positionne le debug UI dans le coin supérieur gauche de la vue
+            // Positionne le debug UI dans le coin supï¿½rieur gauche de la vue
             Transform playerHead = Camera.main.transform;
             Vector3 debugPosition = playerHead.position +
                 playerHead.forward * 2f +
@@ -92,7 +94,7 @@ public class VRPerformanceMonitor : MonoBehaviour
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
         currentFPS = 1.0f / deltaTime;
 
-        // Met à jour l'historique FPS
+        // Met ï¿½ jour l'historique FPS
         fpsHistory.Add(currentFPS);
         if (fpsHistory.Count > maxHistorySize)
         {
@@ -107,7 +109,7 @@ public class VRPerformanceMonitor : MonoBehaviour
         }
         averageFPS = sum / fpsHistory.Count;
 
-        // Vérifie si une optimisation est nécessaire
+        // Vï¿½rifie si une optimisation est nï¿½cessaire
         if (enableAutoOptimization && !isOptimizing)
         {
             CheckPerformanceThresholds();
@@ -126,10 +128,11 @@ public class VRPerformanceMonitor : MonoBehaviour
     {
         if (!enableMonitoring) return;
 
-        // Mémoire
+        // Mï¿½moire
         memoryUsage = System.GC.GetTotalMemory(false);
 
-        // Statistiques de rendu avec vérification
+        // Statistiques de rendu avec vï¿½rification
+#if UNITY_EDITOR
         try
         {
             drawCalls = UnityStats.batches;
@@ -143,6 +146,13 @@ public class VRPerformanceMonitor : MonoBehaviour
             triangles = 0;
             vertices = 0;
         }
+#else
+        // UnityStats n'existe pas en dehors de l'ï¿½diteur : ces mï¿½triques
+        // restent ï¿½ 0 dans un build (Player/VR/WebGL).
+        drawCalls = 0;
+        triangles = 0;
+        vertices = 0;
+#endif
 
         UpdateDebugUI();
         CheckPerformanceWarning();
@@ -198,17 +208,17 @@ public class VRPerformanceMonitor : MonoBehaviour
     {
         if (averageFPS < criticalThreshold && currentQualityLevel > 0)
         {
-            Debug.LogWarning($"Performance critique détectée: {averageFPS:F1} FPS");
+            Debug.LogWarning($"Performance critique dï¿½tectï¿½e: {averageFPS:F1} FPS");
             OptimizePerformance();
         }
         else if (averageFPS < warningThreshold && currentQualityLevel > 1)
         {
-            Debug.LogWarning($"Performance dégradée détectée: {averageFPS:F1} FPS");
+            Debug.LogWarning($"Performance dï¿½gradï¿½e dï¿½tectï¿½e: {averageFPS:F1} FPS");
             ReduceQuality();
         }
         else if (averageFPS > targetFrameRate * 0.95f && currentQualityLevel < 2)
         {
-            // Performance bonne, on peut augmenter la qualité
+            // Performance bonne, on peut augmenter la qualitï¿½
             IncreaseQuality();
         }
     }
@@ -229,15 +239,15 @@ public class VRPerformanceMonitor : MonoBehaviour
         isOptimizing = true;
         Debug.Log("Optimisation des performances...");
 
-        // Réduit la qualité au minimum
+        // Rï¿½duit la qualitï¿½ au minimum
         SetQualityLevel(0);
 
-        // Optimisations supplémentaires
+        // Optimisations supplï¿½mentaires
         QualitySettings.shadows = ShadowQuality.Disable;
         QualitySettings.antiAliasing = 0;
         QualitySettings.anisotropicFiltering = AnisotropicFiltering.Disable;
 
-        // Réduit la résolution de rendu si nécessaire
+        // Rï¿½duit la rï¿½solution de rendu si nï¿½cessaire
         UnityEngine.XR.XRSettings.eyeTextureResolutionScale = 0.8f;
 
         StartCoroutine(ResetOptimizationFlag());
@@ -270,7 +280,7 @@ public class VRPerformanceMonitor : MonoBehaviour
                 break;
         }
 
-        Debug.Log($"Qualité définie à : {GetQualityLevelName()}");
+        Debug.Log($"Qualitï¿½ dï¿½finie ï¿½ : {GetQualityLevelName()}");
     }
 
     void ReduceQuality()
@@ -293,8 +303,8 @@ public class VRPerformanceMonitor : MonoBehaviour
     {
         if (materials == null || materials.Length == 0) return;
 
-        // Trouve tous les renderers et applique les matériaux optimisés
-        Renderer[] renderers = FindObjectsByType<Renderer>();
+        // Trouve tous les renderers et applique les matï¿½riaux optimisï¿½s
+        Renderer[] renderers = FindObjectsByType<Renderer>(FindObjectsSortMode.None);
 
         for (int i = 0; i < renderers.Length && i < materials.Length; i++)
         {
@@ -303,11 +313,6 @@ public class VRPerformanceMonitor : MonoBehaviour
                 renderers[i].material = materials[i];
             }
         }
-    }
-
-    private T[] FindObjectsByType<T>()
-    {
-        throw new NotImplementedException();
     }
 
     public void ToggleDebugUI()
@@ -323,10 +328,10 @@ public class VRPerformanceMonitor : MonoBehaviour
     {
         System.GC.Collect();
         Resources.UnloadUnusedAssets();
-        Debug.Log("Garbage Collection forcé");
+        Debug.Log("Garbage Collection forcï¿½");
     }
 
-    // Méthodes publiques pour les autres scripts
+    // Mï¿½thodes publiques pour les autres scripts
     public float GetCurrentFPS() => currentFPS;
     public float GetAverageFPS() => averageFPS;
     public bool IsPerformanceGood() => averageFPS >= warningThreshold;

@@ -27,10 +27,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4c3631f5e58749a59194e0cf6baf6d5, type: 3}
   m_Name: Standalone Providers
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   m_RequiresSettingsUpdate: 0
-  m_AutomaticLoading: 0
-  m_AutomaticRunning: 0
+  m_AutomaticLoading: 1
+  m_AutomaticRunning: 1
   m_Loaders:
   - {fileID: 11400000, guid: f5309f8c1e455bf40a6f2ae543b57375, type: 2}
 --- !u!114 &1435664692850783011
@@ -58,10 +58,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4c3631f5e58749a59194e0cf6baf6d5, type: 3}
   m_Name: Android Providers
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   m_RequiresSettingsUpdate: 0
-  m_AutomaticLoading: 0
-  m_AutomaticRunning: 0
+  m_AutomaticLoading: 1
+  m_AutomaticRunning: 1
   m_Loaders:
   - {fileID: 11400000, guid: f5309f8c1e455bf40a6f2ae543b57375, type: 2}
 --- !u!114 &6636155535665311327

@@ -163,7 +163,8 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Standalone: com.DefaultCompany.3D-Project
+    Standalone: com.VRMotorEngine.VRMotorEngine
+    Android: com.VRMotorEngine.VRMotorEngine
   buildNumber:
     Standalone: 0
     VisionOS: 0

@@ -57,6 +57,12 @@ public class ManualAssemblyController : MonoBehaviour
 
     void InitializeAssemblyParts()
     {
+        if (partsStorageArea == null || engineAssemblyArea == null)
+        {
+            Debug.LogError("ManualAssemblyController: 'partsStorageArea' ou 'engineAssemblyArea' n'est pas assigné dans l'Inspector.");
+            return;
+        }
+
         string[] partNames = {
             "carter-moteur-inf", "carter-moteur-sup", "cylinder", "carter1",
             "carter-embrayage", "carter-demareur", "filtre-a-huile",
@@ -119,7 +125,7 @@ public class ManualAssemblyController : MonoBehaviour
             XRSimpleInteractable simpleInteractable = partObject.GetComponent<XRSimpleInteractable>();
             if (simpleInteractable != null)
             {
-                DestroyImmediate(simpleInteractable);
+                Destroy(simpleInteractable);
             }
 
             // Ajoute XRGrabInteractable
@@ -152,7 +158,15 @@ public class ManualAssemblyController : MonoBehaviour
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
             // Assigner au layer EngineParts
-            partObject.layer = LayerMask.NameToLayer("EngineParts");
+            int enginePartsLayer = LayerMask.NameToLayer("EngineParts");
+            if (enginePartsLayer < 0)
+            {
+                Debug.LogWarning("Le layer 'EngineParts' n'existe pas dans Tags & Layers ; la pièce conserve son layer actuel.");
+            }
+            else
+            {
+                partObject.layer = enginePartsLayer;
+            }
 
             // AJOUTER/CONFIGURER COLLIDER
             Collider col = partObject.GetComponent<Collider>();
@@ -609,6 +623,8 @@ public class ManualAssemblyController : MonoBehaviour
     public float GetAssemblyProgress()
     {
         currentAssemblyStep = GetAssembledCount();
+
+        if (assemblyParts.Count == 0) return 0f;
 
         float progress = (float)currentAssemblyStep / assemblyParts.Count;
         Debug.Log($"Progression de l'assemblage : {progress:P0}");

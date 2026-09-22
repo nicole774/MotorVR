@@ -46,7 +46,7 @@ public class VRInputManager : MonoBehaviour
 
     void SetupQuickMenu()
     {
-        if (quickMenu != null)
+        if (quickMenu != null && Camera.main != null)
         {
             quickMenu.SetActive(false);
 
@@ -84,7 +84,7 @@ public class VRInputManager : MonoBehaviour
             isMenuOpen = !isMenuOpen;
             quickMenu.SetActive(isMenuOpen);
 
-            if (isMenuOpen)
+            if (isMenuOpen && Camera.main != null)
             {
                 // Repositionne le menu devant l'utilisateur
                 Transform playerHead = Camera.main.transform;
@@ -99,7 +99,7 @@ public class VRInputManager : MonoBehaviour
 
     void HandlePrimaryAction()
     {
-        // Actions contextuelles selon la scène
+        // Actions contextuelles selon la scï¿½ne
         string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
         switch (currentScene)
@@ -161,7 +161,7 @@ public class VRInputManager : MonoBehaviour
         if (intensity < 0) intensity = hapticIntensity;
         if (duration < 0) duration = hapticDuration;
 
-        // Trouve le bon contrôleur
+        // Trouve le bon contrï¿½leur
         XRController controller = null;
         if (controllerNode == XRNode.LeftHand && leftController != null)
             controller = leftController;
@@ -180,7 +180,7 @@ public class VRInputManager : MonoBehaviour
         yield return new WaitForSeconds(duration);
     }
 
-    // Méthodes publiques pour les autres scripts
+    // Mï¿½thodes publiques pour les autres scripts
     public void QuickReturnToMenu()
     {
         if (sceneManager != null)
@@ -216,7 +216,7 @@ public class VRInputManager : MonoBehaviour
 
     void Update()
     {
-        // Debug inputs en éditeur
+        // Debug inputs en ï¿½diteur
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.M))
             ToggleQuickMenu();
