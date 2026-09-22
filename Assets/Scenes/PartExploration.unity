@@ -3620,6 +3620,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6084503f826bbb428b1e677dc1a75d4, type: 3}
+--- !u!1 &555000011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 555000013}
+  - component: {fileID: 555000012}
+  m_Layer: 0
+  m_Name: PCPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &555000012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 555000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b04ed0f78456344e82401507fe2ef7d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  moveSpeed: 4
+  sprintMultiplier: 2
+  jumpForce: 5
+  enableJump: 1
+  mouseSensitivity: 2
+  invertY: 0
+  maxLookAngle: 80
+  grabDistance: 10
+  grabbableLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  rotationSpeed: 40
+  smoothGrab: 1
+  grabSmoothness: 10
+  interactionLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  interactionRange: 5
+  showInteractionRay: 1
+  snapDistance: 8
+  enableManualSnap: 1
+  snapSound: {fileID: 0}
+  grabSound: {fileID: 0}
+  releaseSound: {fileID: 0}
+--- !u!4 &555000013
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 555000011}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.6, z: -3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3631,3 +3699,4 @@ SceneRoots:
   - {fileID: 873323261}
   - {fileID: 1852574886}
   - {fileID: 208292206}
+  - {fileID: 555000013}
