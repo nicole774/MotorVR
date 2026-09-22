@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Contrôleur PC amélioré avec système de grab/assemblage intégré
-/// Combine déplacement, interaction UI, et manipulation d'objets
+/// Contrï¿½leur PC amï¿½liorï¿½ avec systï¿½me de grab/assemblage intï¿½grï¿½
+/// Combine dï¿½placement, interaction UI, et manipulation d'objets
 /// </summary>
 public class EnhancedPCPlayerController : MonoBehaviour
 {
@@ -101,6 +101,7 @@ public class EnhancedPCPlayerController : MonoBehaviour
             GameObject cameraObj = new GameObject("PC Player Camera");
             cameraObj.transform.SetParent(transform);
             cameraObj.transform.localPosition = new Vector3(0, 1.6f, 0);
+            cameraObj.tag = "MainCamera";
             playerCamera = cameraObj.AddComponent<Camera>();
             cameraObj.AddComponent<AudioListener>();
         }
