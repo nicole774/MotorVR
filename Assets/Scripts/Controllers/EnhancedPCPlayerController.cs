@@ -164,8 +164,10 @@ public class EnhancedPCPlayerController : MonoBehaviour
     
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Curseur libre et cliquable par d�faut (mode "menu classique").
+        // Appuyer sur �chap pour passer en mode regard/d�placement (souris verrouill�e).
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         transform.position = new Vector3(0, 1, -3);
     }
     
@@ -562,19 +564,20 @@ public class EnhancedPCPlayerController : MonoBehaviour
     private void OnGUI()
     {
         // Display controls
-        GUI.Box(new Rect(10, 10, 300, 160), "Enhanced PC Controls:");
-        GUI.Label(new Rect(20, 35, 280, 20), "WASD: Move | Mouse: Look");
-        GUI.Label(new Rect(20, 55, 280, 20), "Left Shift: Sprint | Space: Jump");
-        GUI.Label(new Rect(20, 75, 280, 20), "Left Click: Grab/Release");
-        GUI.Label(new Rect(20, 95, 280, 20), "Right Click: Force Release");
-        GUI.Label(new Rect(20, 115, 280, 20), "Q/E: Rotate Object");
-        GUI.Label(new Rect(20, 135, 280, 20), "Scroll: Adjust Depth");
-        GUI.Label(new Rect(20, 155, 280, 20), "ESC: Toggle Cursor");
+        bool locked = Cursor.lockState == CursorLockMode.Locked;
+        GUI.Box(new Rect(10, 10, 300, 180), "Enhanced PC Controls:");
+        GUI.Label(new Rect(20, 35, 280, 20), locked ? "Mode: Look/Move (souris verrouill�e)" : "Mode: Curseur libre (clic sur menus)");
+        GUI.Label(new Rect(20, 55, 280, 20), "ESC: Basculer entre les deux modes");
+        GUI.Label(new Rect(20, 75, 280, 20), "WASD: Move | Mouse: Look (mode verrouill�)");
+        GUI.Label(new Rect(20, 95, 280, 20), "Left Shift: Sprint | Space: Jump");
+        GUI.Label(new Rect(20, 115, 280, 20), "Left Click: Grab/Release/Bouton UI");
+        GUI.Label(new Rect(20, 135, 280, 20), "Right Click: Force Release");
+        GUI.Label(new Rect(20, 155, 280, 20), "Q/E: Rotate Object | Scroll: Depth");
         
         if (grabbedObject != null)
         {
-            GUI.Box(new Rect(10, 180, 200, 40), "");
-            GUI.Label(new Rect(20, 195, 180, 20), $"Grabbed: {grabbedObject.name}");
+            GUI.Box(new Rect(10, 200, 200, 40), "");
+            GUI.Label(new Rect(20, 215, 180, 20), $"Grabbed: {grabbedObject.name}");
         }
     }
     
