@@ -73,7 +73,7 @@ public class VRTutorialSystem : MonoBehaviour
     private Coroutine stepTimeoutCoroutine;
     private Coroutine handGuidanceCoroutine;
 
-    // R�f�rences aux objets interactifs
+    // Références aux objets interactifs
     private Dictionary<string, GameObject> interactiveObjects;
     private TutorialStep currentStep;
 
@@ -114,7 +114,7 @@ public class VRTutorialSystem : MonoBehaviour
         // Initialise la liste des objets interactifs
         FindInteractiveObjects();
 
-        // Cache l'UI au d�marrage
+        // Cache l'UI au démarrage
         SetTutorialUIActive(false);
     }
 
@@ -138,7 +138,7 @@ public class VRTutorialSystem : MonoBehaviour
     {
         interactiveObjects = new Dictionary<string, GameObject>();
 
-        // Trouve tous les objets avec des noms sp�cifiques
+        // Trouve tous les objets avec des noms spécifiques
         string[] objectNames = {
             "carter-moteur-inf", "carter-moteur-sup", "cylinder", "carter1",
             "carter-embrayage", "carter-demareur", "filtre-a-huile",
@@ -156,13 +156,13 @@ public class VRTutorialSystem : MonoBehaviour
         }
     }
 
-    #region Contr�le du Tutoriel
+    #region Contrôle du Tutoriel
 
     public void StartTutorial()
     {
         if (tutorialSteps.Count == 0)
         {
-            Debug.LogWarning("Aucune �tape de tutoriel d�finie!");
+            Debug.LogWarning("Aucune étape de tutoriel définie!");
             return;
         }
 
@@ -172,7 +172,7 @@ public class VRTutorialSystem : MonoBehaviour
 
         ShowStep(currentStepIndex);
 
-        // Son de d�but
+        // Son de début
         if (audioManager != null)
             audioManager.PlayVoiceInstruction("tutorial_start");
     }
@@ -217,7 +217,7 @@ public class VRTutorialSystem : MonoBehaviour
         StopCurrentStepEffects();
         isTutorialActive = false;
 
-        // Affiche un message de f�licitations
+        // Affiche un message de félicitations
         ShowCompletionMessage();
 
         if (audioManager != null)
@@ -226,7 +226,7 @@ public class VRTutorialSystem : MonoBehaviour
 
     #endregion
 
-    #region Affichage des �tapes
+    #region Affichage des étapes
 
     void ShowStep(int stepIndex)
     {
@@ -235,7 +235,7 @@ public class VRTutorialSystem : MonoBehaviour
         currentStep = tutorialSteps[stepIndex];
         isStepCompleted = false;
 
-        // Met � jour l'UI
+        // Met à jour l'UI
         UpdateTutorialUI();
 
         // Affiche les indicateurs visuels
@@ -261,7 +261,7 @@ public class VRTutorialSystem : MonoBehaviour
             descriptionText.text = currentStep.stepDescription;
 
         if (progressText != null)
-            progressText.text = $"�tape {currentStepIndex + 1} sur {tutorialSteps.Count}";
+            progressText.text = $"Étape {currentStepIndex + 1} sur {tutorialSteps.Count}";
 
         if (progressSlider != null)
         {
@@ -269,7 +269,7 @@ public class VRTutorialSystem : MonoBehaviour
             progressSlider.value = currentStepIndex + 1;
         }
 
-        // Active/d�sactive les boutons selon l'�tape
+        // Active/désactive les boutons selon l'étape
         if (skipButton != null)
             skipButton.gameObject.SetActive(allowSkipSteps && currentStep.isOptional);
     }
@@ -286,7 +286,7 @@ public class VRTutorialSystem : MonoBehaviour
         }
         else if (currentStep.highlightPosition != Vector3.zero)
         {
-            // Highlight d'une position sp�cifique
+            // Highlight d'une position spécifique
             HighlightPosition(currentStep.highlightPosition);
         }
     }
@@ -295,7 +295,7 @@ public class VRTutorialSystem : MonoBehaviour
     {
         if (target == null) return;
 
-        // Cr�e un highlight autour de l'objet
+        // Crée un highlight autour de l'objet
         if (highlightPrefab != null)
         {
             currentHighlight = Instantiate(highlightPrefab, target.transform.position, Quaternion.identity);
@@ -305,16 +305,16 @@ public class VRTutorialSystem : MonoBehaviour
             StartCoroutine(AnimateHighlight(currentHighlight));
         }
 
-        // Ajoute un effet de glow au mat�riau
+        // Ajoute un effet de glow au matériau
         Renderer renderer = target.GetComponent<Renderer>();
         if (renderer != null && glowMaterial != null)
         {
-            // Sauvegarde le mat�riau original (si n�cessaire)
+            // Sauvegarde le matériau original (si nécessaire)
             Material originalMaterial = renderer.material;
             renderer.material = glowMaterial;
         }
 
-        // Fl�che pointant vers l'objet
+        // Flèche pointant vers l'objet
         ShowArrowToTarget(target.transform.position);
     }
 
@@ -340,7 +340,7 @@ public class VRTutorialSystem : MonoBehaviour
             currentArrow = Instantiate(arrowIndicatorPrefab, arrowPosition, Quaternion.identity);
             currentArrow.transform.LookAt(targetPosition);
 
-            // Anime la fl�che
+            // Anime la flèche
             StartCoroutine(AnimateArrow(currentArrow));
         }
     }
@@ -399,7 +399,7 @@ public class VRTutorialSystem : MonoBehaviour
         GameObject target = interactiveObjects[currentStep.targetObjectName];
         Transform targetTransform = target.transform;
 
-        // D�termine quelle main utiliser selon l'action
+        // Détermine quelle main utiliser selon l'action
         Transform handGuide = currentStep.requiredAction == TutorialAction.GrabObject ?
             rightHandGuide : leftHandGuide;
 
@@ -409,7 +409,7 @@ public class VRTutorialSystem : MonoBehaviour
 
             while (!isStepCompleted && target != null)
             {
-                // Met � jour la ligne de guide
+                // Met à jour la ligne de guide
                 guideLine.SetPosition(0, handGuide.position);
                 guideLine.SetPosition(1, targetTransform.position);
 
@@ -422,7 +422,7 @@ public class VRTutorialSystem : MonoBehaviour
 
     #endregion
 
-    #region D�tection des Actions
+    #region Détection des Actions
 
     void Update()
     {
@@ -436,7 +436,7 @@ public class VRTutorialSystem : MonoBehaviour
         switch (currentStep.requiredAction)
         {
             case TutorialAction.WaitForCompletion:
-                // Compl�t� automatiquement apr�s un d�lai
+                // Complété automatiquement après un délai
                 break;
 
             case TutorialAction.PointAt:
@@ -467,13 +467,13 @@ public class VRTutorialSystem : MonoBehaviour
 
     void CheckPointingAction()
     {
-        // V�rifie si le joueur pointe vers l'objet cible
-        // Implementation d�pendante du syst�me de pointing VR
+        // Vérifie si le joueur pointe vers l'objet cible
+        // Implementation dépendante du système de pointing VR
     }
 
     void CheckGrabAction()
     {
-        // V�rifie si l'objet cible est saisi
+        // Vérifie si l'objet cible est saisi
         if (interactiveObjects.ContainsKey(currentStep.targetObjectName))
         {
             GameObject target = interactiveObjects[currentStep.targetObjectName];
@@ -489,12 +489,12 @@ public class VRTutorialSystem : MonoBehaviour
 
     void CheckButtonPress()
     {
-        // Impl�mentation sp�cifique selon le bouton
+        // Implémentation spécifique selon le bouton
     }
 
     void CheckSliderMovement()
     {
-        // V�rifie si le slider a �t� boug�
+        // Vérifie si le slider a été bougé
         if (interactiveObjects.ContainsKey("explosionSlider"))
         {
             Slider slider = interactiveObjects["explosionSlider"].GetComponent<Slider>();
@@ -507,17 +507,17 @@ public class VRTutorialSystem : MonoBehaviour
 
     void CheckPartSelection()
     {
-        // V�rifie via le PartExplorationController
+        // Vérifie via le PartExplorationController
         PartExplorationController explorationController = FindFirstObjectByType<PartExplorationController>();
         if (explorationController != null)
         {
-            // Logic pour v�rifier la s�lection
+            // Logic pour vérifier la sélection
         }
     }
 
     void CheckPartAssembly()
     {
-        // V�rifie via le ManualAssemblyController
+        // Vérifie via le ManualAssemblyController
         ManualAssemblyController assemblyController = FindFirstObjectByType<ManualAssemblyController>();
         if (assemblyController != null && assemblyController.GetAssemblyProgress() > 0)
         {
@@ -531,20 +531,20 @@ public class VRTutorialSystem : MonoBehaviour
 
         isStepCompleted = true;
 
-        // Son de succ�s
+        // Son de succès
         if (audioManager != null)
             audioManager.PlaySuccessSound();
 
-        // Effet visuel de succ�s
+        // Effet visuel de succès
         ShowStepCompletionEffect();
 
-        // Passe � l'�tape suivante apr�s un d�lai
+        // Passe à l'étape suivante après un délai
         StartCoroutine(DelayedNextStep(1.5f));
     }
 
     void ShowStepCompletionEffect()
     {
-        // Effet de particules de succ�s
+        // Effet de particules de succès
         if (highlightParticles != null)
         {
             var main = highlightParticles.main;
@@ -588,7 +588,7 @@ public class VRTutorialSystem : MonoBehaviour
 
         if (!isStepCompleted)
         {
-            // R�p�te l'instruction ou propose de passer
+            // Répète l'instruction ou propose de passer
             if (audioManager != null)
                 audioManager.PlayVoiceInstruction("step_timeout");
 
@@ -607,7 +607,7 @@ public class VRTutorialSystem : MonoBehaviour
 
     void StopCurrentStepEffects()
     {
-        // Arr�te les coroutines
+        // Arrête les coroutines
         if (stepTimeoutCoroutine != null)
         {
             StopCoroutine(stepTimeoutCoroutine);
@@ -637,7 +637,7 @@ public class VRTutorialSystem : MonoBehaviour
         if (guideLine != null)
             guideLine.gameObject.SetActive(false);
 
-        // Arr�te les particules
+        // Arrête les particules
         if (highlightParticles != null)
             highlightParticles.Stop();
     }
@@ -651,10 +651,10 @@ public class VRTutorialSystem : MonoBehaviour
     void ShowCompletionMessage()
     {
         if (titleText != null)
-            titleText.text = "Tutoriel Termin�!";
+            titleText.text = "Tutoriel Terminé!";
 
         if (descriptionText != null)
-            descriptionText.text = "F�licitations! Vous avez termin� le tutoriel. Vous pouvez maintenant explorer librement l'application.";
+            descriptionText.text = "Félicitations! Vous avez terminé le tutoriel. Vous pouvez maintenant explorer librement l'application.";
 
         // Cache les boutons de navigation
         if (nextButton != null)
@@ -666,7 +666,7 @@ public class VRTutorialSystem : MonoBehaviour
         if (exitTutorialButton != null)
             exitTutorialButton.gameObject.SetActive(true);
 
-        // Auto-fermeture apr�s 5 secondes
+        // Auto-fermeture après 5 secondes
         StartCoroutine(AutoCloseTutorial(5f));
     }
 
@@ -678,14 +678,14 @@ public class VRTutorialSystem : MonoBehaviour
 
     #endregion
 
-    #region M�thodes Publiques
+    #region Méthodes Publiques
 
     public bool IsTutorialActive() => isTutorialActive;
     public int GetCurrentStepIndex() => currentStepIndex;
     public int GetTotalSteps() => tutorialSteps.Count;
     public float GetProgress() => (float)(currentStepIndex + 1) / tutorialSteps.Count;
 
-    // M�thodes appel�es par d'autres scripts
+    // Méthodes appelées par d'autres scripts
     public void OnPartSelected(string partName)
     {
         if (currentStep.requiredAction == TutorialAction.SelectPart &&

@@ -3,11 +3,11 @@ using UnityEngine;
 public class AutoSocketSizer : MonoBehaviour
 {
     [Header("Configuration")]
-    public float sizeMultiplier = 1.2f; // 20% plus grand que la pièce
-    public GameObject engineParent; // Référence au moteur assemblé
-    public GameObject assemblyArea; // Zone d'assemblage où créer les sockets
+    public float sizeMultiplier = 1.2f; // 20% plus grand que la piÃ¨ce
+    public GameObject engineParent; // RÃ©fÃ©rence au moteur assemblÃ©
+    public GameObject assemblyArea; // Zone d'assemblage oÃ¹ crÃ©er les sockets
 
-    [Header("Noms des pièces")]
+    [Header("Noms des piÃ¨ces")]
     public string[] partNames = {
         "carter-moteur-inf",
         "carter-moteur-sup",
@@ -41,52 +41,52 @@ public class AutoSocketSizer : MonoBehaviour
         }
     }
 
-    [ContextMenu("Créer Tous les Sockets")]
+    [ContextMenu("CrÃ©er Tous les Sockets")]
     public void CreateAllSockets()
     {
         if (engineParent == null || assemblyArea == null)
         {
-            Debug.LogError("Engine Parent ou Assembly Area non assigné !");
+            Debug.LogError("Engine Parent ou Assembly Area non assignÃ© !");
             return;
         }
 
-        Debug.Log("=== CRÉATION AUTOMATIQUE DES SOCKETS ===");
+        Debug.Log("=== CRÃ‰ATION AUTOMATIQUE DES SOCKETS ===");
 
         foreach (string partName in partNames)
         {
             CreateSocketForPart(partName);
         }
 
-        Debug.Log("Création des sockets terminée !");
+        Debug.Log("CrÃ©ation des sockets terminÃ©e !");
     }
 
     void CreateSocketForPart(string partName)
     {
-        // Trouver la pièce dans le moteur
+        // Trouver la piÃ¨ce dans le moteur
         Transform partTransform = FindPartInChildren(engineParent.transform, partName);
 
         if (partTransform == null)
         {
-            Debug.LogWarning("Pièce non trouvée: " + partName);
+            Debug.LogWarning("PiÃ¨ce non trouvÃ©e: " + partName);
             return;
         }
 
-        // Vérifier si le socket existe déjà
+        // VÃ©rifier si le socket existe dÃ©jÃ 
         string socketName = partName + "_Socket";
         GameObject existingSocket = GameObject.Find(socketName);
 
         if (existingSocket != null)
         {
-            Debug.Log("Socket existe déjà: " + socketName);
+            Debug.Log("Socket existe dÃ©jÃ : " + socketName);
             UpdateSocketSize(existingSocket, partTransform.gameObject);
             return;
         }
 
-        // Créer le socket
+        // CrÃ©er le socket
         GameObject socket = new GameObject(socketName);
         socket.transform.SetParent(assemblyArea.transform);
 
-        // Positionner le socket à la même position que la pièce
+        // Positionner le socket Ã  la mÃªme position que la piÃ¨ce
         socket.transform.position = partTransform.position;
         socket.transform.rotation = partTransform.rotation;
 
@@ -94,16 +94,16 @@ public class AutoSocketSizer : MonoBehaviour
         BoxCollider socketCollider = socket.AddComponent<BoxCollider>();
         socketCollider.isTrigger = true;
 
-        // Calculer la taille basée sur la pièce
+        // Calculer la taille basÃ©e sur la piÃ¨ce
         SetSocketSizeFromPart(socketCollider, partTransform.gameObject);
 
         // Ajouter tag
         socket.tag = "Socket";
 
-        // Créer visualisateur
+        // CrÃ©er visualisateur
         CreateSocketVisualizer(socket);
 
-        Debug.Log("Socket créé: " + socketName + " avec taille: " + socketCollider.size);
+        Debug.Log("Socket crÃ©Ã©: " + socketName + " avec taille: " + socketCollider.size);
     }
 
     void SetSocketSizeFromPart(BoxCollider socketCollider, GameObject part)
@@ -112,7 +112,7 @@ public class AutoSocketSizer : MonoBehaviour
 
         if (partCollider == null)
         {
-            Debug.LogWarning("Pas de collider sur la pièce: " + part.name);
+            Debug.LogWarning("Pas de collider sur la piÃ¨ce: " + part.name);
             socketCollider.size = Vector3.one;
             return;
         }
@@ -123,7 +123,7 @@ public class AutoSocketSizer : MonoBehaviour
         Vector3 socketSize = partSize * sizeMultiplier;
         socketCollider.size = socketSize;
 
-        Debug.Log(part.name + " - Taille pièce: " + partSize + " - Taille socket: " + socketSize);
+        Debug.Log(part.name + " - Taille piÃ¨ce: " + partSize + " - Taille socket: " + socketSize);
     }
 
     void CreateSocketVisualizer(GameObject socket)
@@ -139,7 +139,7 @@ public class AutoSocketSizer : MonoBehaviour
         if (vizCollider != null)
             DestroyImmediate(vizCollider);
 
-        // Assigner matériau si disponible
+        // Assigner matÃ©riau si disponible
         Renderer renderer = visualizer.GetComponent<Renderer>();
         Material socketMaterial = Resources.Load<Material>("CorrectSocketMaterial");
         if (socketMaterial != null)
@@ -148,10 +148,10 @@ public class AutoSocketSizer : MonoBehaviour
         }
     }
 
-    [ContextMenu("Mettre à jour Tailles des Sockets")]
+    [ContextMenu("Mettre Ã  jour Tailles des Sockets")]
     public void UpdateAllSocketSizes()
     {
-        Debug.Log("=== MISE À JOUR DES TAILLES DE SOCKETS ===");
+        Debug.Log("=== MISE Ã€ JOUR DES TAILLES DE SOCKETS ===");
 
         foreach (string partName in partNames)
         {

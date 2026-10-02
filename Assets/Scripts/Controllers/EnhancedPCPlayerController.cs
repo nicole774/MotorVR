@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Contr�leur PC am�lior� avec syst�me de grab/assemblage int�gr�
-/// Combine d�placement, interaction UI, et manipulation d'objets
+/// Contrôleur PC amélioré avec système de grab/assemblage intégré
+/// Combine déplacement, interaction UI, et manipulation d'objets
 /// </summary>
 public class EnhancedPCPlayerController : MonoBehaviour
 {
@@ -12,6 +12,8 @@ public class EnhancedPCPlayerController : MonoBehaviour
     [SerializeField] private float sprintMultiplier = 2f;
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private bool enableJump = true;
+    [Tooltip("Garder la position du PCPlayer placee dans la scene au lieu de le teleporter en (0, 1, -3) au demarrage")]
+    [SerializeField] private bool useSceneSpawnPosition = false;
     
     [Header("Mouse Look Settings")]
     [SerializeField] private float mouseSensitivity = 2f;
@@ -19,6 +21,8 @@ public class EnhancedPCPlayerController : MonoBehaviour
     [SerializeField] private float maxLookAngle = 80f;
     
     [Header("Grab System")]
+    [Tooltip("Desactiver dans les scenes qui gerent elles-memes le clic sur les pieces (ex : PartExploration)")]
+    [SerializeField] private bool enableGrab = true;
     [SerializeField] private float grabDistance = 10f;
     [SerializeField] private LayerMask grabbableLayer = -1;
     [SerializeField] private float rotationSpeed = 50f;
@@ -127,7 +131,19 @@ public class EnhancedPCPlayerController : MonoBehaviour
     
     private void InitializeInputActions()
     {
-        moveAction = new InputAction("Move", InputActionType.Value, "<Keyboard>/wasd");
+        // "<Keyboard>/wasd" n'est pas un chemin valide : il faut un composite 2D.
+        // Les touches sont physiques, donc W/A/S/D = Z/Q/S/D sur un clavier AZERTY.
+        moveAction = new InputAction("Move", InputActionType.Value);
+        moveAction.AddCompositeBinding("2DVector")
+            .With("Up", "<Keyboard>/w")
+            .With("Down", "<Keyboard>/s")
+            .With("Left", "<Keyboard>/a")
+            .With("Right", "<Keyboard>/d");
+        moveAction.AddCompositeBinding("2DVector")
+            .With("Up", "<Keyboard>/upArrow")
+            .With("Down", "<Keyboard>/downArrow")
+            .With("Left", "<Keyboard>/leftArrow")
+            .With("Right", "<Keyboard>/rightArrow");
         lookAction = new InputAction("Look", InputActionType.Value, "<Mouse>/delta");
         jumpAction = new InputAction("Jump", InputActionType.Button, "<Keyboard>/space");
         sprintAction = new InputAction("Sprint", InputActionType.Button, "<Keyboard>/leftShift");
@@ -164,11 +180,66 @@ public class EnhancedPCPlayerController : MonoBehaviour
     
     private void Start()
     {
-        // Curseur libre et cliquable par d�faut (mode "menu classique").
-        // Appuyer sur �chap pour passer en mode regard/d�placement (souris verrouill�e).
+        // Curseur libre et cliquable par défaut (mode "menu classique").
+        // Appuyer sur Échap pour passer en mode regard/déplacement (souris verrouillée).
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        transform.position = new Vector3(0, 1, -3);
+        if (!useSceneSpawnPosition)
+        {
+            transform.position = new Vector3(0, 1, -3);
+        }
+
+        // Sans casque, la camera du XR Origin rend aussi l'image et capte les clics UI (Camera.main)
+        if (!UnityEngine.XR.XRSettings.isDeviceActive)
+        {
+            DisableOtherScreenCameras();
+        }
+    }
+
+    private bool IsPointerOverUI()
+    {
+        // En mode verrouille le curseur est cache : seul le rayon central compte
+        return Cursor.lockState != CursorLockMode.Locked &&
+               UnityEngine.EventSystems.EventSystem.current != null &&
+               UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
+    }
+
+    private void DisableOtherScreenCameras()
+    {
+        foreach (Camera cam in FindObjectsByType<Camera>(FindObjectsSortMode.None))
+        {
+            if (cam != playerCamera && cam.targetTexture == null)
+                cam.enabled = false;
+        }
+
+        foreach (AudioListener listener in FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
+        {
+            if (listener.gameObject != playerCamera.gameObject)
+                listener.enabled = false;
+        }
+
+        // L'EventSystem a un XRUIInputModule ET un InputSystemUIInputModule : seul le premier est actif
+        // et il ne gere pas les clics souris dans le build. On laisse la main au module souris standard.
+        foreach (var xrModule in FindObjectsByType<UnityEngine.XR.Interaction.Toolkit.UI.XRUIInputModule>(FindObjectsSortMode.None))
+        {
+            if (xrModule.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>() != null)
+                xrModule.enabled = false;
+        }
+
+        // Ancien script de test qui saisit aussi les pieces au clic, avec une camera memorisee
+        // au demarrage (souvent celle du XR Origin) : il attrapait une autre piece que celle visee
+        foreach (PCGrabTestController grabTest in FindObjectsByType<PCGrabTestController>(FindObjectsSortMode.None))
+        {
+            grabTest.enabled = false;
+        }
+
+        // Les canvas World Space sans camera utilisent Camera.main pour situer les clics :
+        // on leur donne explicitement la camera du joueur PC
+        foreach (Canvas canvas in FindObjectsByType<Canvas>(FindObjectsSortMode.None))
+        {
+            if (canvas.renderMode == RenderMode.WorldSpace)
+                canvas.worldCamera = playerCamera;
+        }
     }
     
     private void Update()
@@ -190,7 +261,7 @@ public class EnhancedPCPlayerController : MonoBehaviour
         moveInput = moveAction.ReadValue<Vector2>();
         lookInput = lookAction.ReadValue<Vector2>();
         isSprinting = sprintAction.IsPressed();
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
+        isGrounded = characterController.isGrounded || Physics.Raycast(transform.position, Vector3.down, 1.1f);
     }
     
     private void HandleMovement()
@@ -238,8 +309,8 @@ public class EnhancedPCPlayerController : MonoBehaviour
     
     private void HandleGrabSystem()
     {
-        // Grab action
-        if (grabAction.triggered)
+        // Grab action (pas quand le clic vise un bouton/panneau UI)
+        if (enableGrab && grabAction.triggered && !IsPointerOverUI())
         {
             if (grabbedObject == null)
             {
@@ -271,7 +342,9 @@ public class EnhancedPCPlayerController : MonoBehaviour
         Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         
-        if (Physics.Raycast(ray, out hit, grabDistance, grabbableLayer))
+        // Ignore les triggers (sockets 20% plus grands que leur piece) et le calque Ignore Raycast
+        // (sol invisible pose a hauteur du rig VR, au-dessus de certaines pieces)
+        if (Physics.Raycast(ray, out hit, grabDistance, grabbableLayer & ~Physics.IgnoreRaycastLayer, QueryTriggerInteraction.Ignore))
         {
             GameObject hitObject = hit.collider.gameObject;
             
@@ -435,7 +508,15 @@ public class EnhancedPCPlayerController : MonoBehaviour
     {
         // Handle UI and non-grabbable interactions
         if (grabbedObject != null) return; // Don't interact while grabbing
-        
+
+        // Curseur libre : l'EventSystem gere seul les clics UI. Le rayon physique ne sert
+        // qu'en mode verrouille, sinon un bouton est declenche deux fois (ou un bouton voisin)
+        if (Cursor.lockState != CursorLockMode.Locked)
+        {
+            ClearHighlight();
+            return;
+        }
+
         Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         
@@ -444,7 +525,7 @@ public class EnhancedPCPlayerController : MonoBehaviour
             Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.red);
         }
         
-        if (Physics.Raycast(ray, out hit, interactionRange, interactionLayers))
+        if (Physics.Raycast(ray, out hit, interactionRange, interactionLayers & ~Physics.IgnoreRaycastLayer, QueryTriggerInteraction.Ignore))
         {
             GameObject hitObject = hit.collider.gameObject;
             
@@ -566,9 +647,9 @@ public class EnhancedPCPlayerController : MonoBehaviour
         // Display controls
         bool locked = Cursor.lockState == CursorLockMode.Locked;
         GUI.Box(new Rect(10, 10, 300, 180), "Enhanced PC Controls:");
-        GUI.Label(new Rect(20, 35, 280, 20), locked ? "Mode: Look/Move (souris verrouill�e)" : "Mode: Curseur libre (clic sur menus)");
+        GUI.Label(new Rect(20, 35, 280, 20), locked ? "Mode: Look/Move (souris verrouillée)" : "Mode: Curseur libre (clic sur menus)");
         GUI.Label(new Rect(20, 55, 280, 20), "ESC: Basculer entre les deux modes");
-        GUI.Label(new Rect(20, 75, 280, 20), "WASD: Move | Mouse: Look (mode verrouill�)");
+        GUI.Label(new Rect(20, 75, 280, 20), "WASD: Move | Mouse: Look (mode verrouillé)");
         GUI.Label(new Rect(20, 95, 280, 20), "Left Shift: Sprint | Space: Jump");
         GUI.Label(new Rect(20, 115, 280, 20), "Left Click: Grab/Release/Bouton UI");
         GUI.Label(new Rect(20, 135, 280, 20), "Right Click: Force Release");

@@ -69,7 +69,7 @@ public class VRMainMenu : MonoBehaviour
             if (playerTransform != null)
             {
                 Vector3 menuPosition = playerTransform.position + playerTransform.forward * menuDistance;
-                menuPosition.y = playerTransform.position.y + 0.5f; // Légèrement plus haut
+                menuPosition.y = playerTransform.position.y + 0.5f; // LÃ©gÃ¨rement plus haut
                 menuCanvas.transform.position = menuPosition;
                 menuCanvas.transform.LookAt(playerTransform);
                 menuCanvas.transform.Rotate(0, 180, 0); // Face au joueur
@@ -152,12 +152,12 @@ public class VRMainMenu : MonoBehaviour
         {
             XRSimpleInteractable interactable = button.gameObject.AddComponent<XRSimpleInteractable>();
 
-            // Configure les événements hover pour les effets visuels
+            // Configure les Ã©vÃ©nements hover pour les effets visuels
             interactable.hoverEntered.AddListener((args) => OnButtonHover(button, true));
             interactable.hoverExited.AddListener((args) => OnButtonHover(button, false));
         }
 
-        // Ajoute un collider si nécessaire
+        // Ajoute un collider si nÃ©cessaire
         if (button.GetComponent<Collider>() == null)
         {
             BoxCollider collider = button.gameObject.AddComponent<BoxCollider>();
@@ -181,33 +181,33 @@ public class VRMainMenu : MonoBehaviour
 
     void SetupPanels()
     {
-        // Configure le texte À propos
+        // Configure le texte Ã€ propos
         if (aboutText != null)
         {
-            aboutText.text = @"<size=24><b>Moteur VR - Application Éducative</b></size>
+            aboutText.text = @"<size=24><b>Moteur VR - Application Ã‰ducative</b></size>
 
-Cette application de réalité virtuelle vous permet d'explorer en détail un moteur thermique à combustion interne.
+Cette application de rÃ©alitÃ© virtuelle vous permet d'explorer en dÃ©tail un moteur thermique Ã  combustion interne.
 
-<b>Fonctionnalités :</b>
-• Vue éclatée interactive avec contrôle du niveau d'explosion
-• Exploration détaillée de chaque pièce avec informations techniques
-• Assemblage/désassemblage manuel en réalité virtuelle
+<b>FonctionnalitÃ©s :</b>
+â€¢ Vue Ã©clatÃ©e interactive avec contrÃ´le du niveau d'explosion
+â€¢ Exploration dÃ©taillÃ©e de chaque piÃ¨ce avec informations techniques
+â€¢ Assemblage/dÃ©sassemblage manuel en rÃ©alitÃ© virtuelle
 
-<b>Pièces du moteur incluses :</b>
-• Carter moteur (inférieur et supérieur)
-• Cylindres et culasse
-• Système d'embrayage et démarreur
-• Alternateur et filtre à huile
-• Et bien d'autres composants...
+<b>PiÃ¨ces du moteur incluses :</b>
+â€¢ Carter moteur (infÃ©rieur et supÃ©rieur)
+â€¢ Cylindres et culasse
+â€¢ SystÃ¨me d'embrayage et dÃ©marreur
+â€¢ Alternateur et filtre Ã  huile
+â€¢ Et bien d'autres composants...
 
 <b>Instructions :</b>
-Utilisez vos contrôleurs VR pour pointer et sélectionner les éléments. 
-Dans les modes d'assemblage, saisissez les pièces et placez-les aux bons endroits.
+Utilisez vos contrÃ´leurs VR pour pointer et sÃ©lectionner les Ã©lÃ©ments. 
+Dans les modes d'assemblage, saisissez les piÃ¨ces et placez-les aux bons endroits.
 
-Développé avec Unity et XR Interaction Toolkit pour Oculus.";
+DÃ©veloppÃ© avec Unity et XR Interaction Toolkit pour Oculus.";
         }
 
-        // Configure les paramètres
+        // Configure les paramÃ¨tres
         SetupSettings();
 
         // Cache tous les panneaux sauf le principal
@@ -233,7 +233,7 @@ Développé avec Unity et XR Interaction Toolkit pour Oculus.";
         if (languageDropdown != null)
         {
             languageDropdown.options.Clear();
-            languageDropdown.options.Add(new Dropdown.OptionData("Français"));
+            languageDropdown.options.Add(new Dropdown.OptionData("FranÃ§ais"));
             languageDropdown.options.Add(new Dropdown.OptionData("English"));
             languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
         }
@@ -299,18 +299,18 @@ Développé avec Unity et XR Interaction Toolkit pour Oculus.";
         if (settingsPanel != null) settingsPanel.SetActive(false);
         if (quitConfirmPanel != null) quitConfirmPanel.SetActive(false);
 
-        // Affiche le panneau demandé
+        // Affiche le panneau demandÃ©
         if (activePanel != null)
             activePanel.SetActive(true);
     }
 
     #endregion
 
-    #region Chargement des scènes
+    #region Chargement des scÃ¨nes
 
     void LoadExplodedView()
     {
-        Debug.Log("Chargement de la vue éclatée...");
+        Debug.Log("Chargement de la vue Ã©clatÃ©e...");
         if (sceneManager != null)
             sceneManager.LoadExplodedViewScene();
     }
@@ -331,7 +331,7 @@ Développé avec Unity et XR Interaction Toolkit pour Oculus.";
 
     #endregion
 
-    #region Paramètres
+    #region ParamÃ¨tres
 
     void OnVolumeChanged(float value)
     {
@@ -340,15 +340,15 @@ Développé avec Unity et XR Interaction Toolkit pour Oculus.";
 
     void OnSubtitlesToggled(bool enabled)
     {
-        // Implémente la logique des sous-titres
-        Debug.Log($"Sous-titres : {(enabled ? "Activés" : "Désactivés")}");
+        // ImplÃ©mente la logique des sous-titres
+        Debug.Log($"Sous-titres : {(enabled ? "ActivÃ©s" : "DÃ©sactivÃ©s")}");
     }
 
     void OnLanguageChanged(int languageIndex)
     {
-        // Implémente le changement de langue
+        // ImplÃ©mente le changement de langue
         string[] languages = { "fr", "en" };
-        Debug.Log($"Langue changée vers : {languages[languageIndex]}");
+        Debug.Log($"Langue changÃ©e vers : {languages[languageIndex]}");
     }
 
     #endregion
@@ -363,7 +363,8 @@ Développé avec Unity et XR Interaction Toolkit pour Oculus.";
     {
         // Gestion des inputs pour les tests
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Escape))
+        // Echap sert deja a basculer le mode souris du controleur PC
+        if (Input.GetKeyDown(KeyCode.Escape) && FindAnyObjectByType<EnhancedPCPlayerController>() == null)
         {
             if (quitConfirmPanel != null && quitConfirmPanel.activeInHierarchy)
                 HideQuitConfirmation();
@@ -382,7 +383,7 @@ Développé avec Unity et XR Interaction Toolkit pour Oculus.";
     {
         if (menuCanvas != null && playerTransform != null)
         {
-            // Optionnel : fait suivre le menu au joueur (décommente si souhaité)
+            // Optionnel : fait suivre le menu au joueur (dÃ©commente si souhaitÃ©)
             // Vector3 direction = (playerTransform.position - menuCanvas.transform.position).normalized;
             // menuCanvas.transform.LookAt(menuCanvas.transform.position + direction);
         }
