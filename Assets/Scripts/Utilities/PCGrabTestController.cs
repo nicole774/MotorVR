@@ -17,7 +17,7 @@ public class PCGrabTestController : MonoBehaviour
         playerCamera = Camera.main;
         if (playerCamera == null)
         {
-            // Cherche la camÈra dans XR Origin si Camera.main est null
+            // Cherche la cam√©ra dans XR Origin si Camera.main est null
             playerCamera = FindFirstObjectByType<Camera>();
         }
     }
@@ -32,10 +32,17 @@ public class PCGrabTestController : MonoBehaviour
         }
     }
 
+    bool IsPointerOverUI()
+    {
+        return UnityEngine.EventSystems.EventSystem.current != null &&
+               UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
+    }
+
     void HandleMouseInput()
     {
-        // Clic gauche pour saisir/l‚cher
-        if (Input.GetMouseButtonDown(0))
+        // Clic gauche pour saisir/l√¢cher
+        // Ignore le clic quand il vise un bouton/panneau UI
+        if (Input.GetMouseButtonDown(0) && !IsPointerOverUI())
         {
             if (grabbedObject == null)
             {
@@ -47,7 +54,7 @@ public class PCGrabTestController : MonoBehaviour
             }
         }
 
-        // Clic droit pour forcer le l‚chage
+        // Clic droit pour forcer le l√¢chage
         if (Input.GetMouseButtonDown(1))
         {
             if (grabbedObject != null)
@@ -74,7 +81,7 @@ public class PCGrabTestController : MonoBehaviour
         {
             GameObject hitObject = hit.collider.gameObject;
 
-            Debug.Log("Objet touchÈ: " + hitObject.name + " Tag: " + hitObject.tag);
+            Debug.Log("Objet touch√©: " + hitObject.name + " Tag: " + hitObject.tag);
             Debug.Log("A XRGrab? " + (hitObject.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>() != null));
 
             // Test temporaire : saisir n'importe quel objet avec collider
@@ -82,7 +89,7 @@ public class PCGrabTestController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Aucun objet touchÈ par le raycast");
+            Debug.Log("Aucun objet touch√© par le raycast");
         }
     }
 
@@ -93,15 +100,15 @@ public class PCGrabTestController : MonoBehaviour
         // Calculer l'offset par rapport au point de clic
         grabOffset = obj.transform.position - hitPoint;
 
-        // Distance de la camÈra
+        // Distance de la cam√©ra
         grabDepth = Vector3.Distance(playerCamera.transform.position, obj.transform.position);
 
-        // DÈsactiver la gravitÈ pendant la manipulation
+        // D√©sactiver la gravit√© pendant la manipulation
         Rigidbody rb = grabbedObject.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.useGravity = false;
-            rb.isKinematic = true; // DÈsactive la physique temporairement
+            rb.isKinematic = true; // D√©sactive la physique temporairement
         }
 
         // Feedback visuel
@@ -125,7 +132,7 @@ public class PCGrabTestController : MonoBehaviour
         Vector3 worldPosition = playerCamera.ScreenToWorldPoint(mousePosition);
         Vector3 targetPosition = worldPosition + grabOffset;
 
-        // Mouvement direct - pas d'interpolation pour Èliminer les saccades
+        // Mouvement direct - pas d'interpolation pour √©liminer les saccades
         grabbedObject.transform.position = targetPosition;
 
         // Rotation avec les touches Q/E
@@ -143,7 +150,7 @@ public class PCGrabTestController : MonoBehaviour
     {
         if (grabbedObject == null) return;
 
-        // RÈactiver la physique
+        // R√©activer la physique
         Rigidbody rb = grabbedObject.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -151,7 +158,7 @@ public class PCGrabTestController : MonoBehaviour
             rb.useGravity = false;
         }
 
-        // V…RIFICATION MANUELLE DU SNAP
+        // V√âRIFICATION MANUELLE DU SNAP
         ManualAssemblyController assemblyController = FindFirstObjectByType<ManualAssemblyController>();
         if (assemblyController != null)
         {
@@ -172,7 +179,7 @@ public class PCGrabTestController : MonoBehaviour
                         // SNAP MANUEL
                         grabbedObject.transform.position = part.assemblyPosition;
                         part.isAssembled = true;
-                        Debug.Log($"SNAP R…USSI: {part.partName} assemblÈe!");
+                        Debug.Log($"SNAP R√âUSSI: {part.partName} assembl√©e!");
                     }
                     break;
                 }
@@ -186,7 +193,7 @@ public class PCGrabTestController : MonoBehaviour
             renderer.material.color = Color.white;
         }
 
-        Debug.Log("Objet l‚chÈ: " + grabbedObject.name);
+        Debug.Log("Objet l√¢ch√©: " + grabbedObject.name);
         grabbedObject = null;
     }
 
@@ -207,7 +214,7 @@ public class PCGrabTestController : MonoBehaviour
             if (simpleInteractable != null)
             {
                 DestroyImmediate(simpleInteractable);
-                Debug.Log("XRSimpleInteractable supprimÈ de " + part.name);
+                Debug.Log("XRSimpleInteractable supprim√© de " + part.name);
             }
         }
     }

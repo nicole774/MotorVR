@@ -404,6 +404,8 @@ public class ExplodedViewController : MonoBehaviour
         VREngineSceneManager sceneManager = FindFirstObjectByType<VREngineSceneManager>();
         if (sceneManager != null)
             sceneManager.ReturnToMainMenu();
+        else // Aucun VREngineSceneManager dans cette scene : chargement direct
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 
     // Méthodes publiques pour l'intégration XR

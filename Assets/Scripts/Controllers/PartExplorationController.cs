@@ -19,7 +19,7 @@ public class PartInfo
 
 public class PartExplorationController : MonoBehaviour
 {
-    [Header("Configuration des Pi�ces")]
+    [Header("Configuration des Pièces")]
     public List<PartInfo> partsDatabase = new List<PartInfo>();
 
     [Header("UI Information Panel")]
@@ -41,7 +41,7 @@ public class PartExplorationController : MonoBehaviour
 
     [Header("Spacing Mode")]
     public Button spacingButton;
-    public float spacingDistance = 0.2f; // Distance d'espacement en m�tres
+    public float spacingDistance = 0.2f; // Distance d'espacement en mètres
     private bool isSpacingActive = false;
     private Dictionary<Transform, Vector3> originalPositions;
 
@@ -56,39 +56,39 @@ public class PartExplorationController : MonoBehaviour
         SetupUI();
         SetupXRInteraction();
 
-        // Initialisation du syst�me d'espacement
+        // Initialisation du système d'espacement
         originalPositions = new Dictionary<Transform, Vector3>();
         InitializeOriginalPositions();
     }
 
     void InitializeDatabase()
     {
-        // Initialise la base de donn�es des pi�ces avec les informations
+        // Initialise la base de données des pièces avec les informations
         partsDatabase = new List<PartInfo>
         {
             new PartInfo
             {
                 partName = "carter-moteur-inf",
-                displayName = "Carter Moteur Inf�rieur",
-                function = "Prot�ge la partie inf�rieure du moteur et contient l'huile",
-                material = "Aluminium moul�",
-                specifications = "Capacit� d'huile: 4-5L, R�sistance: 150�C"
+                displayName = "Carter Moteur Inférieur",
+                function = "Protège la partie inférieure du moteur et contient l'huile",
+                material = "Aluminium moulé",
+                specifications = "Capacité d'huile: 4-5L, Résistance: 150°C"
             },
             new PartInfo
             {
                 partName = "carter-moteur-sup",
-                displayName = "Carter Moteur Sup�rieur",
-                function = "Forme la partie sup�rieure du bloc moteur",
+                displayName = "Carter Moteur Supérieur",
+                function = "Forme la partie supérieure du bloc moteur",
                 material = "Fonte d'aluminium",
-                specifications = "Poids: 15-20kg, Temp�rature max: 200�C"
+                specifications = "Poids: 15-20kg, Température max: 200°C"
             },
             new PartInfo
             {
                 partName = "cylinder",
                 displayName = "Cylindre",
-                function = "Chambre o� s'effectue la combustion du m�lange air-carburant",
+                function = "Chambre où s'effectue la combustion du mélange air-carburant",
                 material = "Fonte avec chemise en acier",
-                specifications = "Diam�tre: 80-90mm, Course: 75-85mm"
+                specifications = "Diamètre: 80-90mm, Course: 75-85mm"
             },
             new PartInfo
             {
@@ -102,61 +102,61 @@ public class PartExplorationController : MonoBehaviour
             {
                 partName = "carter-embrayage",
                 displayName = "Carter d'Embrayage",
-                function = "Prot�ge le m�canisme d'embrayage",
-                material = "Aluminium moul�",
+                function = "Protège le mécanisme d'embrayage",
+                material = "Aluminium moulé",
                 specifications = "Compatible transmission manuelle"
             },
             new PartInfo
             {
                 partName = "carter-demareur",
-                displayName = "Carter D�marreur",
-                function = "Support et protection du d�marreur",
-                material = "Acier estamp�",
+                displayName = "Carter Démarreur",
+                function = "Support et protection du démarreur",
+                material = "Acier estampé",
                 specifications = "Puissance: 1.2kW, 12V"
             },
             new PartInfo
             {
                 partName = "filtre-a-huile",
-                displayName = "Filtre � Huile",
-                function = "Filtre les impuret�s de l'huile moteur",
-                material = "M�tal avec �l�ment filtrant papier",
-                specifications = "Capacit�: 0.5L, Changement: 10000km"
+                displayName = "Filtre à Huile",
+                function = "Filtre les impuretés de l'huile moteur",
+                material = "Métal avec élément filtrant papier",
+                specifications = "Capacité: 0.5L, Changement: 10000km"
             },
             new PartInfo
             {
                 partName = "carter-huile-moteur",
                 displayName = "Carter d'Huile",
-                function = "R�servoir d'huile moteur",
-                material = "T�le d'acier emboutie",
+                function = "Réservoir d'huile moteur",
+                material = "Tôle d'acier emboutie",
                 specifications = "Volume: 4.5L, Vidange par bouchon"
             },
             new PartInfo
             {
                 partName = "alternateur",
                 displayName = "Alternateur",
-                function = "G�n�re l'�lectricit� pour alimenter les syst�mes",
-                material = "Bo�tier aluminium, bobines cuivre",
+                function = "Génère l'électricité pour alimenter les systèmes",
+                material = "Boîtier aluminium, bobines cuivre",
                 specifications = "14V, 90-120A, 1800-6000 rpm"
             },
             new PartInfo
             {
                 partName = "demareur",
-                displayName = "D�marreur",
-                function = "Lance le moteur lors du d�marrage",
-                material = "Bo�tier fonte, bobines cuivre",
+                displayName = "Démarreur",
+                function = "Lance le moteur lors du démarrage",
+                material = "Boîtier fonte, bobines cuivre",
                 specifications = "12V, couple: 150-200 Nm"
             },
             new PartInfo
             {
                 partName = "culasse",
                 displayName = "Culasse",
-                function = "Partie sup�rieure du moteur, contient les soupapes",
+                function = "Partie supérieure du moteur, contient les soupapes",
                 material = "Alliage d'aluminium",
                 specifications = "2-4 soupapes par cylindre, refroidissement liquide"
             }
         };
 
-        // Cr�e un dictionnaire pour un acc�s rapide
+        // Crée un dictionnaire pour un accès rapide
         partInfoDict = new Dictionary<string, PartInfo>();
         foreach (var part in partsDatabase)
         {
@@ -188,7 +188,7 @@ public class PartExplorationController : MonoBehaviour
             UpdateSpacingButtonText();
         }
 
-        // Ferme le panneau au d�marrage
+        // Ferme le panneau au démarrage
         if (infoPanel != null)
             infoPanel.SetActive(false);
     }
@@ -197,16 +197,16 @@ public class PartExplorationController : MonoBehaviour
     {
         interactableObjects = new List<GameObject>();
 
-        // Trouve le moteur assembl� dans la sc�ne
+        // Trouve le moteur assemblé dans la scène
         GameObject motorParent = GameObject.Find("moteur_assemble");
 
         if (motorParent == null)
         {
-            Debug.LogError("moteur_assemble non trouv� dans la sc�ne !");
+            Debug.LogError("moteur_assemble non trouvé dans la scène !");
             return;
         }
 
-        // Configure les objets interactifs pour toutes les pi�ces du moteur
+        // Configure les objets interactifs pour toutes les pièces du moteur
         foreach (var partInfo in partsDatabase)
         {
             // Cherche dans les enfants du moteur
@@ -214,24 +214,24 @@ public class PartExplorationController : MonoBehaviour
 
             if (partTransform != null)
             {
-                // Assigne la r�f�rence Transform dans partInfo
+                // Assigne la référence Transform dans partInfo
                 partInfo.partTransform = partTransform;
 
                 GameObject partObject = partTransform.gameObject;
                 SetupInteractableObject(partObject);
                 interactableObjects.Add(partObject);
-                Debug.Log("Pi�ce configur�e pour interaction: " + partInfo.partName);
+                Debug.Log("Pièce configurée pour interaction: " + partInfo.partName);
             }
             else
             {
-                Debug.LogWarning("Pi�ce non trouv�e: " + partInfo.partName);
+                Debug.LogWarning("Pièce non trouvée: " + partInfo.partName);
             }
         }
     }
 
     void InitializeOriginalPositions()
     {
-        // Sauvegarde les positions originales de toutes les pi�ces
+        // Sauvegarde les positions originales de toutes les pièces
         foreach (var partInfo in partsDatabase)
         {
             if (partInfo.partTransform != null)
@@ -239,7 +239,7 @@ public class PartExplorationController : MonoBehaviour
                 originalPositions[partInfo.partTransform] = partInfo.partTransform.position;
             }
         }
-        Debug.Log($"Positions originales sauvegard�es pour {originalPositions.Count} pi�ces");
+        Debug.Log($"Positions originales sauvegardées pour {originalPositions.Count} pièces");
     }
 
     public void ToggleSpacing()
@@ -256,12 +256,12 @@ public class PartExplorationController : MonoBehaviour
         }
 
         UpdateSpacingButtonText();
-        Debug.Log($"Mode espacement: {(isSpacingActive ? "Activ�" : "D�sactiv�")}");
+        Debug.Log($"Mode espacement: {(isSpacingActive ? "ActivÃ©" : "Désactivé")}");
     }
 
     void ApplySpacing()
     {
-        // Centre du moteur (calcul� automatiquement)
+        // Centre du moteur (calculé automatiquement)
         Vector3 motorCenter = CalculateMotorCenter();
 
         foreach (var partInfo in partsDatabase)
@@ -270,7 +270,7 @@ public class PartExplorationController : MonoBehaviour
             {
                 Vector3 direction = (partInfo.partTransform.position - motorCenter).normalized;
 
-                // Si la direction est trop petite, utilise une direction par d�faut
+                // Si la direction est trop petite, utilise une direction par défaut
                 if (direction.magnitude < 0.1f)
                 {
                     direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
@@ -336,7 +336,7 @@ public class PartExplorationController : MonoBehaviour
             TextMeshProUGUI buttonText = spacingButton.GetComponentInChildren<TextMeshProUGUI>();
             if (buttonText != null)
             {
-                buttonText.text = isSpacingActive ? "R�assembler" : "Espacer Pi�ces";
+                buttonText.text = isSpacingActive ? "Réassembler" : "Espacer Pièces";
             }
         }
     }
@@ -349,12 +349,12 @@ public class PartExplorationController : MonoBehaviour
             interactable = obj.AddComponent<XRSimpleInteractable>();
         }
 
-        // Supprime les anciens listeners pour �viter les doublons
+        // Supprime les anciens listeners pour éviter les doublons
         interactable.selectEntered.RemoveAllListeners();
         interactable.hoverEntered.RemoveAllListeners();
         interactable.hoverExited.RemoveAllListeners();
 
-        // Configure les �v�nements
+        // Configure les événements
         interactable.selectEntered.AddListener((args) => {
             Debug.Log("SELECT EVENT: " + obj.name);
             OnPartSelected(obj);
@@ -430,10 +430,10 @@ public class PartExplorationController : MonoBehaviour
                 functionText.text = "<b>Fonction:</b> " + info.function;
 
             if (materialText != null)
-                materialText.text = "<b>Mat�riau:</b> " + info.material;
+                materialText.text = "<b>Matériau:</b> " + info.material;
 
             if (specificationsText != null)
-                specificationsText.text = "<b>Sp�cifications:</b> " + info.specifications;
+                specificationsText.text = "<b>Spécifications:</b> " + info.specifications;
 
             if (infoPanel != null)
                 infoPanel.SetActive(true);
@@ -445,7 +445,7 @@ public class PartExplorationController : MonoBehaviour
         if (infoPanel != null)
             infoPanel.SetActive(false);
 
-        // Retire la s�lection
+        // Retire la sélection
         if (currentSelectedPart != null)
         {
             RemoveHighlight(currentSelectedPart);
@@ -458,18 +458,27 @@ public class PartExplorationController : MonoBehaviour
         VREngineSceneManager sceneManager = FindFirstObjectByType<VREngineSceneManager>();
         if (sceneManager != null)
             sceneManager.ReturnToMainMenu();
+        else // Aucun VREngineSceneManager dans cette scene : chargement direct
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
+
+    bool IsPointerOverUI()
+    {
+        return UnityEngine.EventSystems.EventSystem.current != null &&
+               UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
     }
 
     void Update()
     {
         // Test temporaire avec la souris pour PC
-        if (Input.GetMouseButtonDown(0))
+        // Ignore le clic quand il vise un bouton/panneau UI
+        if (Input.GetMouseButtonDown(0) && !IsPointerOverUI())
         {
-            // V�rifie si le panneau d'information est d�j� ouvert
+            // Vérifie si le panneau d'information est déjà ouvert
             if (infoPanel != null && infoPanel.activeInHierarchy)
             {
-                Debug.Log("Panneau d�j� ouvert - fermez-le d'abord avant de s�lectionner une autre pi�ce");
-                return; // Emp�che la s�lection
+                Debug.Log("Panneau déjà ouvert - fermez-le d'abord avant de sélectionner une autre pièce");
+                return; // Empêche la sélection
             }
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -479,15 +488,15 @@ public class PartExplorationController : MonoBehaviour
             {
                 GameObject hitObject = hit.collider.gameObject;
 
-                // V�rifier si c'est une pi�ce du moteur
+                // Vérifier si c'est une pièce du moteur
                 if (hitObject.CompareTag("EnginePart"))
                 {
                     OnPartSelected(hitObject);
-                    Debug.Log("Pi�ce s�lectionn�e avec souris: " + hitObject.name);
+                    Debug.Log("Pièce sélectionnée avec souris: " + hitObject.name);
                 }
                 else
                 {
-                    Debug.Log("Objet cliqu� n'est pas une pi�ce moteur: " + hitObject.name + " (Tag: " + hitObject.tag + ")");
+                    Debug.Log("Objet cliqué n'est pas une pièce moteur: " + hitObject.name + " (Tag: " + hitObject.tag + ")");
                 }
             }
         }
@@ -507,7 +516,7 @@ public class PartExplorationController : MonoBehaviour
 #endif
     }
 
-    // M�thode helper pour chercher dans les enfants
+    // Méthode helper pour chercher dans les enfants
     Transform FindChildByName(Transform parent, string name)
     {
         foreach (Transform child in parent)
@@ -515,7 +524,7 @@ public class PartExplorationController : MonoBehaviour
             if (child.name == name)
                 return child;
 
-            // Recherche r�cursive dans les enfants
+            // Recherche récursive dans les enfants
             Transform found = FindChildByName(child, name);
             if (found != null)
                 return found;

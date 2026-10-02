@@ -5,7 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class VREngineSceneManager : MonoBehaviour
 {
-    [Header("Scène Configuration")]
+    [Header("ScÃ¨ne Configuration")]
     public string menuSceneName = "MainMenu";
     public string explodedViewSceneName = "ExplodedView";
     public string explorationSceneName = "PartExploration";
@@ -37,17 +37,17 @@ public class VREngineSceneManager : MonoBehaviour
         }
     }
 
-    #region Navigation des Scènes
+    #region Navigation des ScÃ¨nes
 
     public void LoadExplodedViewScene()
     {
-        Debug.Log("Chargement de la vue éclatée...");
+        Debug.Log("Chargement de la vue Ã©clatÃ©e...");
         SceneManager.LoadScene(explodedViewSceneName);
     }
 
     public void LoadExplorationScene()
     {
-        Debug.Log("Chargement de l'exploration des pièces...");
+        Debug.Log("Chargement de l'exploration des piÃ¨ces...");
         SceneManager.LoadScene(explorationSceneName);
     }
 
@@ -101,13 +101,13 @@ public class VREngineSceneManager : MonoBehaviour
 
     void Update()
     {
-        // Gestion des inputs XR pour le menu (bouton menu du contrôleur)
+        // Gestion des inputs XR pour le menu (bouton menu du contrÃ´leur)
         HandleXRInput();
     }
 
     void HandleXRInput()
     {
-        // Vous pouvez ajouter ici la gestion des inputs XR spécifiques
+        // Vous pouvez ajouter ici la gestion des inputs XR spÃ©cifiques
         // Par exemple, appui sur le bouton menu pour revenir au menu principal
     }
 
